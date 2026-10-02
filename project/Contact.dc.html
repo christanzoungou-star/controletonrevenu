@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #223037; font-family: Nunito, sans-serif; }
+  a { color: #8FBFA8; } a:hover { color: #FDFBF7; }
+  input::placeholder, textarea::placeholder { color: #8798A1; }
+</style>
+</helmet>
+<div style="background: #2B3A42; border: 1px solid #35474F; border-radius: 24px; padding: 34px 38px; box-sizing: border-box; color: #FDFBF7; font-family: Nunito, sans-serif;">
+  <div style="display: grid; grid-template-columns: .85fr 1.15fr; gap: 44px; align-items: start;">
+
+    <div>
+      <div style="font-size: 14px; letter-spacing: 3px; color: #8FBFA8; font-weight: 800;">CONTACT</div>
+      <div style="font-family: Fredoka, sans-serif; font-size: 32px; line-height: 1.1; letter-spacing: 1px; margin-top: 10px;">Une question, une idée&nbsp;?</div>
+      <div style="font-size: 16px; line-height: 1.6; color: #A9BDC5; margin-top: 12px; text-wrap: pretty;">Dis-moi ce qui te bloque dans le tableau, ce qui manque, ou ce que tu aimerais comprendre. Je lis tout et je réponds sous quelques jours.</div>
+      <a href="{{ lienMail }}" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; background: #223037; border: 1px solid #3C4F58; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-weight: 800; color: #8FBFA8;">✉ {{ adresse }}</a>
+      <div style="margin-top: 20px; display: grid; gap: 10px; font-size: 15px; color: #A9BDC5;">
+        <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #8FBFA8;"></div>Bug ou incohérence de calcul</div>
+        <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #F5CE63;"></div>Suggestion de fonctionnalité</div>
+        <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #C7B9E6;"></div>Question sur la méthode</div>
+      </div>
+      <div style="margin-top: 22px; font-size: 14px; line-height: 1.55; color: #8798A1;">Je ne donne pas de conseil en investissement personnalisé et je ne demande jamais tes identifiants bancaires.</div>
+    </div>
+
+    <div style="background: #223037; border: 1px solid #35474F; border-radius: 18px; padding: 26px 28px;">
+      <sc-if value="{{ formulaireVisible }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; gap: 6px;">
+              <div style="font-size: 14px; color: #A9BDC5;">Prénom</div>
+              <input type="text" value="{{ nom }}" onChange="{{ onNom }}" placeholder="Camille" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;" />
+            </div>
+            <div style="display: grid; gap: 6px;">
+              <div style="font-size: 14px; color: #A9BDC5;">Email</div>
+              <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="camille@exemple.fr" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;" />
+            </div>
+          </div>
+          <div style="display: grid; gap: 6px;">
+            <div style="font-size: 14px; color: #A9BDC5;">Sujet</div>
+            <select value="{{ sujet }}" onChange="{{ onSujet }}" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;">
+              <option value="Question sur la méthode">Question sur la méthode</option>
+              <option value="Bug ou calcul incohérent">Bug ou calcul incohérent</option>
+              <option value="Suggestion de fonctionnalité">Suggestion de fonctionnalité</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+          <div style="display: grid; gap: 6px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <div style="font-size: 14px; color: #A9BDC5;">Message</div>
+              <div style="font-size: 13px; color: #8798A1;">{{ compteur }}</div>
+            </div>
+            <textarea value="{{ message }}" onChange="{{ onMessage }}" rows="5" placeholder="Explique-moi en quelques lignes…" style="font-family: Nunito, sans-serif; font-size: 16px; line-height: 1.5; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none; resize: vertical;"></textarea>
+          </div>
+          <sc-if value="{{ aErreur }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #3A2A28; border: 1px solid #6B4038; border-radius: 11px; padding: 11px 14px; font-size: 15px; color: #F0B3A6;">{{ erreur }}</div>
+          </sc-if>
+          <button onClick="{{ onEnvoyer }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 17px; color: #223037; background: #8FBFA8; border: none; border-radius: 12px; padding: 15px 18px; cursor: pointer;" style-hover="background: #A5CDB8;">Envoyer mon message</button>
+          <div style="font-size: 13px; color: #8798A1; text-align: center;">Le bouton ouvre ton logiciel de messagerie avec le message prérempli, adressé à {{ adresse }}.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ confirmationVisible }}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; gap: 14px; text-align: center; padding: 10px 0;">
+          <div style="width: 54px; height: 54px; margin: 0 auto; border-radius: 17px; background: #6FA98D; color: #17241F; font-size: 24px; display: flex; align-items: center; justify-content: center;">✓</div>
+          <div style="font-family: Fredoka, sans-serif; font-size: 24px;">Message prêt à partir</div>
+          <div style="font-size: 16px; line-height: 1.55; color: #A9BDC5;">Merci {{ nomEnvoye }} — ta messagerie s'est ouverte avec ce message adressé à {{ adresse }}. Si rien ne s'est ouvert, copie-le et envoie-le à cette adresse.</div>
+          <div style="text-align: left; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.55; color: #CBD7DC; white-space: pre-wrap;">{{ recap }}</div>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onClick="{{ onCopier }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #223037; background: #8FBFA8; border: none; border-radius: 12px; padding: 13px 20px; cursor: pointer;" style-hover="background: #A5CDB8;">{{ libelleCopier }}</button>
+            <button onClick="{{ onNouveau }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #FDFBF7; background: transparent; border: 1px solid #3C4F58; border-radius: 12px; padding: 13px 20px; cursor: pointer;" style-hover="background: #33474F;">Nouveau message</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ aHistorique }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top: 26px; padding-top: 22px; border-top: 1px solid #35474F;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+        <div style="font-family: Fredoka, sans-serif; font-size: 20px; letter-spacing: 1px; color: #8FBFA8;">MES MESSAGES ENREGISTRÉS</div>
+        <div style="font-size: 14px; color: #8798A1;">{{ nbMessages }} sur cet appareil</div>
+      </div>
+      <div style="margin-top: 14px; display: grid; gap: 10px;">
+        <sc-for list="{{ historique }}" as="m" hint-placeholder-count="2">
+          <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0 16px; align-items: center; background: #223037; border: 1px solid #35474F; border-radius: 14px; padding: 14px 18px;">
+            <div>
+              <div style="font-size: 16px; font-weight: 800;">{{ m.sujet }}</div>
+              <div style="font-size: 14px; color: #8798A1;">{{ m.apercu }}</div>
+            </div>
+            <div style="font-size: 14px; color: #8798A1;">{{ m.date }}</div>
+            <button onClick="{{ m.onSupprimer }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 14px; color: #F0B3A6; background: transparent; border: 1px solid #6B4038; border-radius: 10px; padding: 9px 13px; cursor: pointer;" style-hover="background: #3A2A28;">Supprimer</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1140},&quot;adresse&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;contact@dispatch-budget.fr&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contact&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    let sauve = {};
+    try { sauve = JSON.parse(localStorage.getItem('dispatch-contact') || '{}'); } catch (e) {}
+    this.state = {
+      messages: sauve.messages || [],
+      nom: '', email: '', sujet: 'Question sur la méthode', message: '',
+      erreur: '', envoye: null, copie: false
+    };
+  }
+  adresse() {
+    return this.props.adresse || 'contact@dispatch-budget.fr';
+  }
+  sauver() {
+    try { localStorage.setItem('dispatch-contact', JSON.stringify({ messages: this.state.messages })); } catch (e) {}
+  }
+  envoyer() {
+    const s = this.state;
+    const nom = (s.nom || '').trim();
+    const email = (s.email || '').trim().toLowerCase();
+    const texte = (s.message || '').trim();
+    if (!nom) return this.setState({ erreur: 'Indique ton prénom.' });
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return this.setState({ erreur: 'Saisis une adresse email valide.' });
+    if (texte.length < 20) return this.setState({ erreur: 'Ton message doit faire au moins 20 caractères.' });
+    const entree = { id: Date.now(), nom: nom, email: email, sujet: s.sujet, texte: texte };
+    const corps = 'De : ' + nom + ' (' + email + ')\n\n' + texte;
+    try {
+      window.location.href = 'mailto:' + this.adresse() + '?subject=' + encodeURIComponent('[Contrôle mon revenu] ' + s.sujet) + '&body=' + encodeURIComponent(corps);
+    } catch (err) {}
+    this.setState({
+      messages: (s.messages || []).concat([entree]),
+      envoye: entree, erreur: '', copie: false,
+      nom: '', email: '', message: ''
+    }, () => this.sauver());
+  }
+  copier() {
+    const e = this.state.envoye;
+    if (!e) return;
+    const txt = 'Sujet : ' + e.sujet + '\nDe : ' + e.nom + ' (' + e.email + ')\n\n' + e.texte;
+    try {
+      navigator.clipboard.writeText(txt);
+      this.setState({ copie: true });
+    } catch (err) {
+      this.setState({ copie: true });
+    }
+  }
+  renderVals() {
+    const s = this.state, e = s.envoye;
+    return {
+      formulaireVisible: !e, confirmationVisible: !!e,
+      adresse: this.adresse(), lienMail: 'mailto:' + this.adresse(),
+      nom: s.nom, email: s.email, sujet: s.sujet, message: s.message,
+      compteur: (s.message || '').trim().length + ' caractère(s)',
+      onNom: (ev) => this.setState({ nom: ev.target.value }),
+      onEmail: (ev) => this.setState({ email: ev.target.value }),
+      onSujet: (ev) => this.setState({ sujet: ev.target.value }),
+      onMessage: (ev) => this.setState({ message: ev.target.value }),
+      erreur: s.erreur, aErreur: !!s.erreur,
+      onEnvoyer: () => this.envoyer(),
+      nomEnvoye: e ? e.nom : '',
+      recap: e ? 'Sujet : ' + e.sujet + '\nDe : ' + e.nom + ' (' + e.email + ')\n\n' + e.texte : '',
+      libelleCopier: s.copie ? 'Copié ✓' : 'Copier le message',
+      onCopier: () => this.copier(),
+      onNouveau: () => this.setState({ envoye: null, erreur: '', copie: false }),
+      aHistorique: (s.messages || []).length > 0,
+      nbMessages: (s.messages || []).length,
+      historique: (s.messages || []).slice().reverse().map(m => ({
+        sujet: m.sujet,
+        apercu: m.texte.length > 90 ? m.texte.slice(0, 90) + '…' : m.texte,
+        date: new Date(m.id).toLocaleDateString('fr-FR'),
+        onSupprimer: () => this.setState({ messages: (this.state.messages || []).filter(x => x.id !== m.id) }, () => this.sauver())
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

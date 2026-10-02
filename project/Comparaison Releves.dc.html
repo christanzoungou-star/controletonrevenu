@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #EFE9E1; font-family: Nunito, sans-serif; }
+  a { color: #4E8C74; } a:hover { color: #2B3A42; }
+</style>
+</helmet>
+<div style="width: 1040px; margin: 0 auto; background: #FDFBF7; border-radius: 24px; padding: 30px 34px; box-sizing: border-box; color: #2B3A42; font-family: Nunito, sans-serif;">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+    <div>
+      <div style="font-family: Fredoka, sans-serif; font-size: 26px; color: #4E7A66; letter-spacing: 1px;">COMPARER DEUX RELEVÉS</div>
+      <div style="font-size: 17px; color: #6B7A81;">Relevés enregistrés depuis ton tableau de dispatch — {{ nb }} en mémoire.</div>
+    </div>
+    <button onClick="{{ onRafraichir }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 15px; color: #2B3A42; background: #E4EFE8; border: none; border-radius: 11px; padding: 11px 16px; cursor: pointer;" style-hover="background: #CFE2D6;">Rafraîchir</button>
+  </div>
+
+  <sc-if value="{{ vide }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top: 18px; background: #F4F8F5; border-radius: 16px; padding: 22px 24px; font-size: 17px; color: #6B7A81;">Il faut au moins deux relevés enregistrés dans le tableau (bloc « Mes données financières ») pour lancer une comparaison.</div>
+  </sc-if>
+
+  <sc-if value="{{ pret }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: #F4F8F5; border-radius: 16px; padding: 16px 20px;">
+          <div style="font-size: 15px; color: #4E7A66; letter-spacing: 1px;">RELEVÉ A</div>
+          <select value="{{ choixA }}" onChange="{{ onA }}" style="margin-top: 6px; width: 100%; font-family: Nunito, sans-serif; font-weight: 700; font-size: 17px; color: #2B3A42; background: #fff; border: 1px solid #C9D8CE; border-radius: 11px; padding: 11px 12px; outline: none;">
+            <sc-for list="{{ options }}" as="o" hint-placeholder-count="2">
+              <option value="{{ o.id }}">{{ o.periode }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="background: #F6F1E9; border-radius: 16px; padding: 16px 20px;">
+          <div style="font-size: 15px; color: #8A7355; letter-spacing: 1px;">RELEVÉ B</div>
+          <select value="{{ choixB }}" onChange="{{ onB }}" style="margin-top: 6px; width: 100%; font-family: Nunito, sans-serif; font-weight: 700; font-size: 17px; color: #2B3A42; background: #fff; border: 1px solid #E0D6C8; border-radius: 11px; padding: 11px 12px; outline: none;">
+            <sc-for list="{{ options }}" as="o" hint-placeholder-count="2">
+              <option value="{{ o.id }}">{{ o.periode }}</option>
+            </sc-for>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0 14px; align-items: center; font-family: Fredoka, sans-serif; font-size: 15px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 2px solid #E4DCD0;">
+        <div>POSTE</div>
+        <div style="text-align: right;">{{ titreA }}</div>
+        <div style="text-align: right;">{{ titreB }}</div>
+        <div style="text-align: right;">ÉCART</div>
+      </div>
+      <sc-for list="{{ lignes }}" as="l" hint-placeholder-count="7">
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0EAE1;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 12px; height: 12px; border-radius: 4px; background: {{ l.couleur }}; flex: none;"></div>
+            <div style="font-size: 17px; font-weight: 700;">{{ l.nom }}</div>
+          </div>
+          <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 20px;">{{ l.a }}</div>
+          <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 20px;">{{ l.b }}</div>
+          <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 20px; color: {{ l.couleurEcart }};">{{ l.ecart }}</div>
+        </div>
+      </sc-for>
+
+      <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+        <div style="background: #F4F8F5; border-radius: 14px; padding: 16px 20px;">
+          <div style="font-size: 15px; color: #4E7A66;">Écart de net avant impôt</div>
+          <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ ecartSalaire }}</div>
+        </div>
+        <div style="background: #F4F8F5; border-radius: 14px; padding: 16px 20px;">
+          <div style="font-size: 15px; color: #4E7A66;">Écart pour l'avenir</div>
+          <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ ecartAvenir }}</div>
+        </div>
+        <div style="background: #2B3A42; color: #fff; border-radius: 14px; padding: 16px 20px;">
+          <div style="font-size: 15px; color: #B9CBD2;">Écart de reste disponible</div>
+          <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ ecartReste }}</div>
+        </div>
+      </div>
+      <div style="margin-top: 12px; font-size: 15px; color: #8B979D;">{{ synthese }}</div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040}}">
+class Component extends DCLogic {
+  state = { hist: [], a: null, b: null };
+  componentDidMount() { this.lire(); }
+  lire() {
+    let hist = [];
+    try { hist = (JSON.parse(localStorage.getItem('dispatch-revenu') || '{}').historique) || []; } catch (e) {}
+    const n = hist.length;
+    this.setState({
+      hist: hist,
+      a: n ? String(hist[Math.max(0, n - 2)].id) : null,
+      b: n ? String(hist[n - 1].id) : null
+    });
+  }
+  fmt(n) {
+    return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(Math.round(n || 0)) + ' €';
+  }
+  signe(n) {
+    const v = Math.round(n || 0);
+    return (v > 0 ? '+ ' : v < 0 ? '− ' : '') + this.fmt(Math.abs(v));
+  }
+  renderVals() {
+    const hist = this.state.hist || [];
+    const defs = [
+      { key: 'placement', nom: 'Placement (Bourse)', couleur: '#8FBFA8' },
+      { key: 'charges', nom: 'Charges & Loyer', couleur: '#C7B9E6' },
+      { key: 'epargneInv', nom: 'Épargne Investissement', couleur: '#F5CE63' },
+      { key: 'plaisir', nom: 'Plaisir & Loisir', couleur: '#F08A7E' },
+      { key: 'impot', nom: 'Impôt', couleur: '#B9A48C' },
+      { key: 'don', nom: 'Don', couleur: '#7FA9C4' }
+    ];
+    const A = hist.find(h => String(h.id) === this.state.a) || hist[0];
+    const B = hist.find(h => String(h.id) === this.state.b) || hist[hist.length - 1];
+    const pret = hist.length >= 2 && !!A && !!B;
+    const val = (h, k) => (h && h.postes ? (h.postes[k] || 0) : 0);
+    const lignes = pret ? defs.map(d => {
+      const e = val(B, d.key) - val(A, d.key);
+      return {
+        nom: d.nom, couleur: d.couleur,
+        a: this.fmt(val(A, d.key)), b: this.fmt(val(B, d.key)),
+        ecart: this.signe(e),
+        couleurEcart: e === 0 ? '#8B979D' : (d.key === 'placement' || d.key === 'epargneInv' ? (e > 0 ? '#4E8C74' : '#C0563F') : (e > 0 ? '#C0563F' : '#4E8C74'))
+      };
+    }) : [];
+    const avenir = (h) => val(h, 'placement') + val(h, 'epargneInv');
+    const eAvenir = pret ? avenir(B) - avenir(A) : 0;
+    return {
+      nb: hist.length, vide: hist.length < 2, pret: pret,
+      options: hist.map(h => ({ id: String(h.id), periode: h.periode })),
+      choixA: this.state.a, choixB: this.state.b,
+      titreA: A ? A.periode : '—', titreB: B ? B.periode : '—',
+      lignes: lignes,
+      ecartSalaire: pret ? this.signe(B.salaire - A.salaire) : '—',
+      ecartAvenir: pret ? this.signe(eAvenir) : '—',
+      ecartReste: pret ? this.signe(B.reste - A.reste) : '—',
+      synthese: pret
+        ? (eAvenir >= 0
+            ? 'Entre ' + A.periode + ' et ' + B.periode + ', ta part orientée vers l\'avenir progresse de ' + this.fmt(eAvenir) + ' par mois.'
+            : 'Entre ' + A.periode + ' et ' + B.periode + ', ta part orientée vers l\'avenir recule de ' + this.fmt(-eAvenir) + ' par mois.')
+        : '',
+      onA: (e) => this.setState({ a: e.target.value }),
+      onB: (e) => this.setState({ b: e.target.value }),
+      onRafraichir: () => this.lire()
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #223037; font-family: Nunito, sans-serif; }
+  a { color: #8FBFA8; } a:hover { color: #FDFBF7; }
+  input::placeholder { color: #8798A1; }
+</style>
+</helmet>
+<div style="background: #2B3A42; border: 1px solid #35474F; border-radius: 24px; padding: 34px 38px; box-sizing: border-box; color: #FDFBF7; font-family: Nunito, sans-serif;">
+
+  <sc-if value="{{ deconnecte }}" hint-placeholder-val="{{ true }}">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start;">
+      <div>
+        <div style="font-size: 14px; letter-spacing: 3px; color: #8FBFA8; font-weight: 800;">{{ surtitre }}</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 32px; line-height: 1.1; letter-spacing: 1px; margin-top: 10px;">{{ titre }}</div>
+        <div style="font-size: 16px; line-height: 1.6; color: #A9BDC5; margin-top: 12px; text-wrap: pretty;">Ton compte reste sur cet appareil : il protège l'accès à tes relevés et te permet de retrouver ton budget d'une visite à l'autre. Aucune donnée n'est envoyée sur internet.</div>
+        <div style="margin-top: 20px; display: grid; gap: 10px; font-size: 15px; color: #A9BDC5;">
+          <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #8FBFA8;"></div>Aucun email de vérification, aucun spam</div>
+          <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #F5CE63;"></div>Ton budget rattaché à ton profil</div>
+          <div style="display: flex; align-items: center; gap: 10px;"><div style="width: 9px; height: 9px; border-radius: 3px; background: #C7B9E6;"></div>Export possible à tout moment</div>
+        </div>
+      </div>
+
+      <div style="background: #223037; border: 1px solid #35474F; border-radius: 18px; padding: 26px 28px;">
+        <div style="display: flex; gap: 8px; background: #2B3A42; border-radius: 12px; padding: 5px;">
+          <button onClick="{{ versInscription }}" style="flex: 1; font-family: Nunito, sans-serif; font-weight: 800; font-size: 15px; color: {{ couleurTexteInscription }}; background: {{ fondInscription }}; border: none; border-radius: 9px; padding: 11px 12px; cursor: pointer;">Créer un compte</button>
+          <button onClick="{{ versConnexion }}" style="flex: 1; font-family: Nunito, sans-serif; font-weight: 800; font-size: 15px; color: {{ couleurTexteConnexion }}; background: {{ fondConnexion }}; border: none; border-radius: 9px; padding: 11px 12px; cursor: pointer;">Se connecter</button>
+        </div>
+
+        <div style="margin-top: 18px; display: grid; gap: 12px;">
+          <sc-if value="{{ modeInscription }}" hint-placeholder-val="{{ true }}">
+            <div style="display: grid; gap: 6px;">
+              <div style="font-size: 14px; color: #A9BDC5;">Prénom</div>
+              <input type="text" value="{{ prenom }}" onChange="{{ onPrenom }}" placeholder="Camille" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;" />
+            </div>
+          </sc-if>
+          <div style="display: grid; gap: 6px;">
+            <div style="font-size: 14px; color: #A9BDC5;">Email</div>
+            <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="camille@exemple.fr" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;" />
+          </div>
+          <div style="display: grid; gap: 6px;">
+            <div style="font-size: 14px; color: #A9BDC5;">Mot de passe</div>
+            <input type="password" value="{{ motDePasse }}" onChange="{{ onMotDePasse }}" placeholder="8 caractères minimum" style="font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none;" />
+          </div>
+          <sc-if value="{{ modeInscription }}" hint-placeholder-val="{{ true }}">
+            <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #A9BDC5; line-height: 1.45; cursor: pointer;">
+              <input type="checkbox" checked="{{ accepte }}" onChange="{{ onAccepte }}" style="margin-top: 3px; width: 16px; height: 16px; accent-color: #8FBFA8;" />
+              <span>Je comprends que cet outil est une estimation personnelle et ne constitue pas un conseil financier.</span>
+            </label>
+          </sc-if>
+
+          <sc-if value="{{ aMessage }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #3A2A28; border: 1px solid #6B4038; border-radius: 11px; padding: 11px 14px; font-size: 15px; color: #F0B3A6;">{{ message }}</div>
+          </sc-if>
+
+          <button onClick="{{ onValider }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 17px; color: #223037; background: #8FBFA8; border: none; border-radius: 12px; padding: 15px 18px; cursor: pointer;" style-hover="background: #A5CDB8;">{{ libelleValider }}</button>
+          <div style="font-size: 13px; color: #8798A1; text-align: center;">Mot de passe stocké localement, sous forme non lisible — si tu l'oublies, réimporte simplement ton fichier d'export.</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ connecte }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="width: 54px; height: 54px; border-radius: 17px; background: #8FBFA8; color: #223037; font-family: Fredoka, sans-serif; font-size: 24px; display: flex; align-items: center; justify-content: center;">{{ initiale }}</div>
+        <div>
+          <div style="font-family: Fredoka, sans-serif; font-size: 26px;">Bonjour {{ prenomActif }}</div>
+          <div style="font-size: 15px; color: #A9BDC5;">{{ emailActif }} · membre depuis {{ depuis }}</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="#outil" style="font-weight: 800; font-size: 16px; color: #223037; background: #8FBFA8; padding: 13px 20px; border-radius: 11px;">Aller à mon tableau</a>
+        <button onClick="{{ onDeconnexion }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #FDFBF7; background: transparent; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 20px; cursor: pointer;" style-hover="background: #33474F;">Se déconnecter</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    let sauve = {};
+    try { sauve = JSON.parse(localStorage.getItem('dispatch-compte') || '{}'); } catch (e) {}
+    this.state = {
+      comptes: sauve.comptes || [],
+      actif: sauve.actif || null,
+      mode: 'inscription',
+      prenom: '', email: '', motDePasse: '', accepte: false, message: ''
+    };
+  }
+  sauver() {
+    try {
+      localStorage.setItem('dispatch-compte', JSON.stringify({ comptes: this.state.comptes, actif: this.state.actif }));
+    } catch (e) {}
+  }
+  empreinte(txt) {
+    let h = 0;
+    for (let i = 0; i < txt.length; i++) { h = (h * 31 + txt.charCodeAt(i)) | 0; }
+    return String(h);
+  }
+  valider() {
+    const s = this.state;
+    const email = (s.email || '').trim().toLowerCase();
+    const mdp = s.motDePasse || '';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return this.setState({ message: 'Saisis une adresse email valide.' });
+    if (mdp.length < 8) return this.setState({ message: 'Le mot de passe doit faire au moins 8 caractères.' });
+    const existant = (s.comptes || []).find(c => c.email === email);
+    if (s.mode === 'inscription') {
+      if (!(s.prenom || '').trim()) return this.setState({ message: 'Indique ton prénom.' });
+      if (!s.accepte) return this.setState({ message: 'Coche la case pour continuer.' });
+      if (existant) return this.setState({ message: 'Un compte existe déjà avec cet email — connecte-toi.', mode: 'connexion' });
+      const compte = { email: email, prenom: s.prenom.trim(), mdp: this.empreinte(mdp), cree: Date.now() };
+      this.setState({ comptes: (s.comptes || []).concat([compte]), actif: email, message: '', motDePasse: '' }, () => this.sauver());
+    } else {
+      if (!existant) return this.setState({ message: 'Aucun compte avec cet email.' });
+      if (existant.mdp !== this.empreinte(mdp)) return this.setState({ message: 'Mot de passe incorrect.' });
+      this.setState({ actif: email, message: '', motDePasse: '' }, () => this.sauver());
+    }
+  }
+  renderVals() {
+    const s = this.state;
+    const compte = (s.comptes || []).find(c => c.email === s.actif);
+    const inscription = s.mode === 'inscription';
+    return {
+      connecte: !!compte, deconnecte: !compte,
+      modeInscription: inscription,
+      surtitre: inscription ? 'CRÉER UN COMPTE' : 'SE CONNECTER',
+      titre: inscription ? 'Garde ton budget au même endroit' : 'Content de te revoir',
+      libelleValider: inscription ? 'Créer mon compte' : 'Me connecter',
+      fondInscription: inscription ? '#8FBFA8' : 'transparent',
+      fondConnexion: inscription ? 'transparent' : '#8FBFA8',
+      couleurTexteInscription: inscription ? '#223037' : '#A9BDC5',
+      couleurTexteConnexion: inscription ? '#A9BDC5' : '#223037',
+      versInscription: () => this.setState({ mode: 'inscription', message: '' }),
+      versConnexion: () => this.setState({ mode: 'connexion', message: '' }),
+      prenom: s.prenom, email: s.email, motDePasse: s.motDePasse, accepte: s.accepte,
+      onPrenom: (e) => this.setState({ prenom: e.target.value }),
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      onMotDePasse: (e) => this.setState({ motDePasse: e.target.value }),
+      onAccepte: (e) => this.setState({ accepte: e.target.checked }),
+      message: s.message, aMessage: !!s.message,
+      onValider: () => this.valider(),
+      onDeconnexion: () => this.setState({ actif: null, motDePasse: '', message: '' }, () => this.sauver()),
+      prenomActif: compte ? compte.prenom : '',
+      emailActif: compte ? compte.email : '',
+      initiale: compte ? compte.prenom.slice(0, 1).toUpperCase() : '',
+      depuis: compte ? new Date(compte.cree).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

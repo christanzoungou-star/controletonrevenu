@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #EFE9E1; font-family: Nunito, sans-serif; }
+  a { color: #4E8C74; }
+  a:hover { color: #C98A3E; }
+  input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+</style>
+</helmet>
+<div style="width: 1040px; margin: 0 auto; background: #FDFBF7; padding: 44px 54px; box-sizing: border-box; color: #2B3A42; font-family: Nunito, sans-serif;">
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start;">
+    <sc-if value="{{ depassement }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 12px; background: #FBE5E2; border: 2px solid #C0563F; border-radius: 16px; padding: 16px 20px;">
+        <div style="flex: none; width: 28px; height: 28px; border-radius: 50%; background: #C0563F; color: #fff; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center;">!</div>
+        <div>
+          <div style="font-size: 17px; font-weight: 800; color: #A6432C;">Budget dépassé de {{ depassementFmt }}</div>
+          <div style="font-size: 15px; color: #8A4634;">Le total affecté ({{ totalFmt }}) est supérieur à ton revenu de {{ salaireFmt }}. Réduis un poste pour revenir à l'équilibre.</div>
+        </div>
+      </div>
+    </sc-if>
+    <div style="background: #E4EFE8; border-radius: 18px; padding: 20px 24px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="font-family: Fredoka, sans-serif; font-size: 19px; color: #4E7A66;">Revenu</div>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
+        <input type="number" value="{{ salaire }}" onChange="{{ onSalaire }}" style="width: 172px; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 40px; color: #2B3A42; background: transparent; border: none; border-bottom: 2px dashed #8FBFA8; padding: 0; outline: none;" />
+        <span style="font-family: Fredoka, sans-serif; font-size: 28px;">€</span>
+      </div>
+      <div style="font-size: 15px; color: #6B7A81; margin-top: 4px;">Montant que tu répartis chaque mois</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; margin-top: 34px; align-items: start;">
+
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr 150px 84px; gap: 0 12px; align-items: center; font-family: Fredoka, sans-serif; font-size: 16px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 10px; border-bottom: 2px solid #E4DCD0;">
+        <div>CATÉGORIE</div>
+        <div style="text-align: right;">MONTANT</div>
+        <div style="text-align: right;">PART</div>
+      </div>
+
+      <sc-for list="{{ lignes }}" as="l" hint-placeholder-count="6">
+        <div style="display: grid; grid-template-columns: 1fr 150px 84px; gap: 0 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0EAE1;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 14px; height: 14px; border-radius: 4px; background: {{ l.couleur }}; flex: none;"></div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="font-size: 18px; font-weight: 700; white-space: nowrap;">{{ l.nom }}</div>
+                <sc-if value="{{ l.aSous }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ l.onToggle }}" title="{{ libelleSous }}" style="flex: none; font-size: 11px; line-height: 1; color: #B0A99F; background: transparent; border: none; cursor: pointer; padding: 2px;" style-hover="color: #6B7A81;">{{ l.glyphe }}</button>
+                </sc-if>
+              </div>
+              <div style="font-size: 14px; color: #8B979D;">{{ l.detail }}</div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <sc-if value="{{ l.editable }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 4px;">
+                <input type="number" value="{{ l.montant }}" onChange="{{ l.onChange }}" style="width: 96px; text-align: right; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 26px; color: #2B3A42; background: transparent; border: none; border-bottom: 2px dashed #D8CFC2; padding: 0; outline: none;" />
+                <span style="font-family: Fredoka, sans-serif; font-size: 20px; color: #6B7A81;">€</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ l.fixe }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family: Fredoka, sans-serif; font-weight: 600; font-size: 26px;">{{ l.montantFmt }}</div>
+            </sc-if>
+          </div>
+          <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 22px; color: #6B7A81;">{{ l.pct }}</div>
+        </div>
+        <sc-if value="{{ l.sousVisibles }}" hint-placeholder-val="{{ false }}">
+          <div style="border-bottom: 1px solid #F0EAE1; padding: 4px 0 10px 26px;">
+            <sc-for list="{{ l.sous }}" as="sc" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 1fr 150px 84px; gap: 0 12px; align-items: center; padding: 5px 0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 12px; height: 2px; border-radius: 1px; background: {{ sc.couleur }}; flex: none;"></div>
+                  <div style="font-size: 16px; color: #40525A;">{{ sc.nom }}</div>
+                </div>
+                <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 4px;">
+                  <input type="number" value="{{ sc.montant }}" onChange="{{ sc.onChange }}" style="width: 76px; text-align: right; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 19px; color: #2B3A42; background: transparent; border: none; border-bottom: 1px dashed #E0D6C8; padding: 0; outline: none;" />
+                  <span style="font-family: Fredoka, sans-serif; font-size: 15px; color: #8B979D;">€</span>
+                </div>
+                <div style="text-align: right; font-size: 15px; color: #8B979D;">{{ sc.pct }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-for>
+
+      <div style="display: grid; grid-template-columns: 1fr 150px 84px; gap: 0 12px; align-items: center; padding: 16px 0 0;">
+        <div style="font-family: Fredoka, sans-serif; font-size: 20px; letter-spacing: 1px; color: {{ couleurAlerte }};">TOTAL AFFECTÉ</div>
+        <div style="text-align: right; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 30px; color: {{ couleurAlerte }};">{{ totalFmt }}</div>
+        <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 22px; color: {{ couleurAlerte }};">{{ pctTotal }}</div>
+      </div>
+      <sc-if value="{{ depassement }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; background: #FBE5E2; border-left: 5px solid #C0563F; border-radius: 12px; padding: 12px 16px;">
+          <div style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #C0563F; color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center;">!</div>
+          <div style="font-size: 15px; color: #A6432C; font-weight: 700;">{{ alerte }}</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ pasDeDepassement }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top: 8px; font-size: 15px; color: #4E7A66;">{{ alerte }}</div>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div>
+        <div ref="{{ circleRef }}" style="position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; background: {{ camembert }}; box-shadow: 0 0 0 6px #FDFBF7, 0 0 0 8px #2B3A42, 0 14px 30px rgba(43,58,66,.14); touch-action: none;">
+          <div style="position: absolute; inset: 27%; border-radius: 50%; background: #FDFBF7; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <div style="font-size: 15px; color: #6B7A81; letter-spacing: 1px;">POUR L'AVENIR</div>
+            <div style="font-family: Fredoka, sans-serif; font-size: 44px; font-weight: 700; color: #4E8C74;">{{ tauxEpargne }} %</div>
+            <div style="font-size: 15px; color: #6B7A81;">{{ montantAvenir }} / mois</div>
+          </div>
+          <sc-for list="{{ lignes }}" as="l" hint-placeholder-count="5">
+            <sc-if value="{{ l.etiq }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; left: {{ l.ex }}%; top: {{ l.ey }}%; transform: translate(-50%,-50%); text-align: center; color: #2B3A42; pointer-events: none;">
+                <div style="font-family: Fredoka, sans-serif; font-size: {{ l.taille }}px; font-weight: 600; letter-spacing: 1px;">{{ l.court }}</div>
+              </div>
+            </sc-if>
+          </sc-for>
+          <sc-for list="{{ poignees }}" as="h" hint-placeholder-count="5">
+            <div onPointerDown="{{ h.onDown }}" onPointerMove="{{ h.onMove }}" onPointerUp="{{ h.onUp }}" style="position: absolute; left: {{ h.x }}%; top: {{ h.y }}%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: #FDFBF7; border: 3px solid #2B3A42; box-shadow: 0 2px 6px rgba(43,58,66,.25); cursor: grab; touch-action: none;" style-active="cursor: grabbing; transform: scale(1.12);"></div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 20px; text-align: center; font-size: 15px; color: #8B979D;">Fais glisser les poignées du camembert pour réajuster tes postes.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="margin-top: 32px;">
+      <div style="background: #E4EFE8; border-radius: 20px; padding: 20px 24px;">
+        <div style="font-family: Caveat, cursive; font-size: 30px; color: #4E7A66;">Fonds d'urgence</div>
+        <div style="margin-top: 6px; font-size: 16px; color: #6B7A81; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span>Objectif</span>
+          <input type="number" value="{{ objectif }}" onChange="{{ onObjectif }}" style="width: 90px; font-weight: 800; font-size: 16px; color: #4E8C74; background: #fff; border: 1px solid #C4DBCD; border-radius: 8px; padding: 3px 6px; outline: none;" />
+          <span>€ — atteint en</span>
+          <input type="number" value="{{ moisSecu }}" onChange="{{ onMoisSecu }}" style="width: 60px; font-weight: 800; font-size: 16px; color: #4E8C74; background: #fff; border: 1px solid #C4DBCD; border-radius: 8px; padding: 3px 6px; outline: none;" />
+          <span>mois</span>
+        </div>
+        <div style="margin-top: 12px; height: 12px; border-radius: 6px; background: #CFE2D6; overflow: hidden;">
+          <div style="width: {{ avanceSecu }}%; height: 100%; background: #6FA98D;"></div>
+        </div>
+        <div style="margin-top: 8px; font-size: 15px; color: #6B7A81;">Puis bascule complète sur l'épargne d'investissement.</div>
+      </div>
+  </div>
+
+  <div style="margin-top: 32px; background: #FDFBF7; border: 2px solid #E4DCD0; border-radius: 20px; padding: 24px 28px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px; color: #4E7A66; letter-spacing: 1px;">PRÉVISIONNEL BOURSIER</div>
+        <div style="font-size: 17px; color: #6B7A81;">iShares Core S&amp;P 500 UCITS ETF (Acc) — {{ placementFmt }} investis chaque mois</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; font-size: 16px; color: #6B7A81;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span>Horizon</span>
+          <input type="number" value="{{ moisEtf }}" onChange="{{ onMoisEtf }}" style="width: 66px; font-weight: 800; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #D8CFC2; border-radius: 8px; padding: 4px 6px; outline: none;" />
+          <span>mois ({{ ansEtf }} ans)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span>Rendement</span>
+          <input type="number" step="0.5" value="{{ tauxEtf }}" onChange="{{ onTauxEtf }}" style="width: 60px; font-weight: 800; font-size: 16px; color: #4E8C74; background: #fff; border: 1px solid #C4DBCD; border-radius: 8px; padding: 4px 6px; outline: none;" />
+          <span>% / an</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 22px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: end; height: 190px;">
+      <sc-for list="{{ etapes }}" as="e" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 8px;">
+          <div style="font-family: Fredoka, sans-serif; font-size: 17px; color: #2B3A42; text-align: center;">{{ e.valeur }}</div>
+          <div style="height: {{ e.hauteur }}%; border-radius: 10px 10px 0 0; background: linear-gradient(180deg, #8FBFA8, #6FA98D);"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; border-top: 2px solid #E4DCD0; padding-top: 10px;">
+      <sc-for list="{{ etapes }}" as="e" hint-placeholder-count="5">
+        <div style="text-align: center;">
+          <div style="font-weight: 800; font-size: 16px;">{{ e.label }}</div>
+          <div style="font-size: 14px; color: #8B979D;">versé {{ e.verse }}</div>
+          <div style="font-size: 14px; color: #4E8C74;">+{{ e.gain }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+      <div style="background: #E4EFE8; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #4E7A66;">Total versé</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px;">{{ etfVerse }}</div>
+      </div>
+      <div style="background: #FDF2DC; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #A8802E;">Intérêts composés</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px;">{{ etfGain }}</div>
+      </div>
+      <div style="background: #2B3A42; color: #fff; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #B9CBD2;">Valeur à {{ moisEtf }} mois</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px;">{{ etfFinal }}</div>
+      </div>
+    </div>
+    <div style="margin-top: 10px; font-size: 13px; color: #A0A9AD;">Simulation à rendement constant, dividendes capitalisés. Les performances passées ne préjugent pas des performances futures.</div>
+  </div>
+
+  <div style="margin-top: 32px; background: #FDFBF7; border: 2px solid #E8D9AE; border-radius: 20px; padding: 24px 28px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px; color: #A8802E; letter-spacing: 1px;">PRÉVISIONNEL ÉPARGNE INVESTISSEMENT</div>
+        <div style="font-size: 17px; color: #6B7A81;">Capital mis de côté — {{ epargneInvFmt }} versés chaque mois</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; font-size: 16px; color: #6B7A81;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span>Horizon</span>
+          <input type="number" value="{{ moisEp }}" onChange="{{ onMoisEp }}" style="width: 66px; font-weight: 800; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #E8D9AE; border-radius: 8px; padding: 4px 6px; outline: none;" />
+          <span>mois ({{ ansEp }} ans)</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 22px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: end; height: 190px;">
+      <sc-for list="{{ etapesEp }}" as="e" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 8px;">
+          <div style="font-family: Fredoka, sans-serif; font-size: 17px; color: #2B3A42; text-align: center;">{{ e.valeur }}</div>
+          <div style="height: {{ e.hauteur }}%; border-radius: 10px 10px 0 0; background: linear-gradient(180deg, #F5CE63, #D9A93C);"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; border-top: 2px solid #E8D9AE; padding-top: 10px;">
+      <sc-for list="{{ etapesEp }}" as="e" hint-placeholder-count="5">
+        <div style="text-align: center;">
+          <div style="font-weight: 800; font-size: 16px;">{{ e.label }}</div>
+          <div style="font-size: 14px; color: #8B979D;">{{ e.ansEp }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+      <div style="background: #FDF2DC; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #A8802E;">Versement mensuel</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px;">{{ epargneInvFmt }}</div>
+      </div>
+      <div style="background: #2B3A42; color: #fff; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #B9CBD2;">Capital à {{ moisEp }} mois</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px;">{{ epFinal }}</div>
+      </div>
+    </div>
+    <div style="margin-top: 10px; font-size: 13px; color: #A0A9AD;">Capital garanti, sans rémunération : simple cumul des versements. Le fonds d'urgence est constitué en premier, le reste alimente l'épargne d'investissement.</div>
+  </div>
+
+  <div style="margin-top: 32px; background: #FDFBF7; border: 2px solid #E0D6C8; border-radius: 20px; padding: 24px 28px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-family: Fredoka, sans-serif; font-size: 24px; color: #8A7355; letter-spacing: 1px;">BARÈME FISCAL — REVENUS</div>
+          <select value="{{ annee }}" onChange="{{ onAnnee }}" style="font-family: Fredoka, sans-serif; font-size: 20px; color: #2B3A42; background: #fff; border: 1px solid #E0D6C8; border-radius: 10px; padding: 6px 10px; outline: none;">
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+          </select>
+          <span style="font-size: 15px; color: #A0A9AD;">Barème publié</span>
+        </div>
+        <div style="font-size: 17px; color: #6B7A81;">Barème progressif, décote, plafonnement du quotient familial et réduction pour don.</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; font-size: 16px; color: #6B7A81;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>Situation</span>
+          <select value="{{ situation }}" onChange="{{ onSituation }}" style="font-family: Nunito, sans-serif; font-weight: 700; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #E0D6C8; border-radius: 10px; padding: 8px 10px; outline: none;">
+            <option value="celibataire">Célibataire</option>
+            <option value="couple">Marié / pacsé</option>
+            <option value="isole">Parent isolé</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>Personnes à charge</span>
+          <input type="number" min="0" value="{{ personnes }}" onChange="{{ onPersonnes }}" style="width: 62px; font-weight: 800; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #E0D6C8; border-radius: 10px; padding: 8px 10px; outline: none;" />
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+      <div style="background: #F6F1E9; border-radius: 16px; padding: 16px 20px;">
+        <div style="font-size: 16px; color: #6B7A81;">Net avant impôt annuel</div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <input type="number" value="{{ netAnnuel }}" onChange="{{ onNetAnnuel }}" style="width: 118px; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 30px; color: #2B3A42; background: transparent; border: none; border-bottom: 2px dashed #DCCFBB; padding: 0; outline: none;" />
+          <span style="font-family: Fredoka, sans-serif; font-size: 20px;">€</span>
+        </div>
+        <div style="font-size: 14px; color: #A0A9AD; margin-top: 6px;">Initialisé à 12 × ton net mensuel</div>
+      </div>
+      <div style="background: #F6F1E9; border-radius: 16px; padding: 16px 20px;">
+        <div style="font-size: 16px; color: #6B7A81;">Cumul net imposable annuel</div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <input type="number" value="{{ cumulImposable }}" onChange="{{ onCumul }}" style="width: 118px; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 30px; color: #2B3A42; background: transparent; border: none; border-bottom: 2px dashed #DCCFBB; padding: 0; outline: none;" />
+          <span style="font-family: Fredoka, sans-serif; font-size: 20px;">€</span>
+        </div>
+        <div style="font-size: 14px; color: #8A7355; margin-top: 6px;">Estimation : net avant impôt × 1,04 — saisis le cumul du bulletin de décembre</div>
+      </div>
+      <div style="background: #F6F1E9; border-radius: 16px; padding: 16px 20px;">
+        <div style="font-size: 16px; color: #6B7A81;">Parts fiscales</div>
+        <div style="font-family: Fredoka, sans-serif; font-weight: 700; font-size: 30px; color: #2B3A42;">{{ parts }}</div>
+        <div style="font-size: 14px; color: #A0A9AD; margin-top: 6px;">Calculé depuis ta situation familiale</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 14px; font-size: 15px; color: #8B979D;">Après abattement de 10 % plafonné : revenu net imposable retenu <strong style="color: #2B3A42;">{{ imposableFmt }}</strong> — soit {{ parPartFmt }} par part.</div>
+
+    <div style="margin-top: 18px; display: grid; grid-template-columns: 1.4fr 80px 1fr 1fr; gap: 0 14px; align-items: center; font-family: Fredoka, sans-serif; font-size: 15px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 2px solid #E0D6C8;">
+      <div>TRANCHE (PAR PART)</div>
+      <div style="text-align: center;">TAUX</div>
+      <div style="text-align: right;">BASE IMPOSÉE</div>
+      <div style="text-align: right;">IMPÔT DÛ</div>
+    </div>
+    <sc-for list="{{ tranches }}" as="t" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 1.4fr 80px 1fr 1fr; gap: 0 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid #F0EAE1;">
+        <div>
+          <div style="font-size: 17px; font-weight: 700;">{{ t.plage }}</div>
+          <div style="margin-top: 5px; height: 6px; border-radius: 3px; background: #F0EAE1; overflow: hidden;">
+            <div style="width: {{ t.largeur }}%; height: 100%; background: #B9A48C;"></div>
+          </div>
+        </div>
+        <div style="text-align: center; font-family: Fredoka, sans-serif; font-size: 20px; color: #8A7355;">{{ t.taux }}</div>
+        <div style="text-align: right; font-size: 17px; color: #6B7A81;">{{ t.assiette }}</div>
+        <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 21px;">{{ t.du }}</div>
+      </div>
+    </sc-for>
+
+    <div style="margin-top: 16px; display: grid; gap: 10px; font-size: 17px;">
+      <div style="display: flex; justify-content: space-between; gap: 16px;"><span>Impôt brut du barème</span><strong>{{ impotBrut }}</strong></div>
+      <div style="display: flex; justify-content: space-between; gap: 16px;"><span>Plafonnement du quotient familial</span><strong>+ {{ plafonnementQf }}</strong></div>
+      <div style="display: flex; justify-content: space-between; gap: 16px;"><span>{{ libelleDecote }}</span><strong style="color: #4E8C74;">− {{ decote }}</strong></div>
+      <div style="display: flex; justify-content: space-between; gap: 16px;"><span>Réduction don (66 % du don annuel, plafond 20 % du revenu)</span><strong style="color: #4E8C74;">− {{ reductionDon }}</strong></div>
+    </div>
+
+    <div style="margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+      <div style="background: #F6F1E9; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #8A7355;">Impôt net annuel</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ impotAnnuel }}</div>
+      </div>
+      <div style="background: #F6F1E9; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #8A7355;">Taux moyen</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ tauxMoyen }}</div>
+      </div>
+      <div style="background: #F6F1E9; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #8A7355;">Tranche marginale</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ tauxMarginal }}</div>
+      </div>
+      <div style="background: #2B3A42; color: #fff; border-radius: 14px; padding: 14px 18px;">
+        <div style="font-size: 15px; color: #B9CBD2;">Par mois</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px;">{{ impotMensuel }}</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+      <div style="font-size: 15px; color: #8B979D;">Écart avec ton poste Impôt actuel : <strong style="color: #2B3A42;">{{ ecartImpot }}</strong> / mois.</div>
+      <button onClick="{{ appliquerImpot }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #FDFBF7; background: #8A7355; border: none; border-radius: 12px; padding: 11px 20px; cursor: pointer;" style-hover="background: #6F5C43;">Appliquer au poste Impôt</button>
+    </div>
+    <div style="margin-top: 10px; font-size: 13px; color: #A0A9AD;">Barème progressif de l'impôt sur le revenu (tranches indicatives). Décote, plafonnement du quotient familial et réduction pour don inclus — estimation indicative, ne remplace pas un calcul officiel.</div>
+  </div>
+
+
+  <div style="margin-top: 32px; background: #FDFBF7; border: 2px solid #C9D8CE; border-radius: 20px; padding: 24px 28px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 26px; color: #4E7A66; letter-spacing: 1px;">MES DONNÉES FINANCIÈRES</div>
+        <div style="font-size: 17px; color: #6B7A81;">Enregistre l'état complet de ton budget, retrouve-le ou compare-le mois après mois.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <input type="text" value="{{ periode }}" onChange="{{ onPeriode }}" placeholder="Nom (ex. {{ placeholderPeriode }})" style="width: 300px; font-family: Nunito, sans-serif; font-size: 17px; color: #2B3A42; background: #fff; border: 1px solid #D8CFC2; border-radius: 12px; padding: 13px 16px; outline: none;" />
+      <button onClick="{{ onEnregistrer }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 17px; color: #FDFBF7; background: #5B8B70; border: none; border-radius: 12px; padding: 14px 26px; cursor: pointer;" style-hover="background: #4C7760;">Enregistrer</button>
+    </div>
+
+    <div style="margin-top: 20px; display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 0 16px; align-items: center; font-size: 15px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 10px; border-bottom: 1px solid #DDD5C8;">
+      <div>ENREGISTREMENT</div>
+      <div>DATE</div>
+      <div>SALAIRE</div>
+      <div></div>
+    </div>
+    <sc-if value="{{ aucunHistorique }}" hint-placeholder-val="{{ true }}">
+      <div style="padding: 18px 0; font-size: 17px; color: #A0A9AD;">Aucun enregistrement pour l'instant — nomme ton mois et clique sur Enregistrer.</div>
+    </sc-if>
+    <sc-for list="{{ historique }}" as="h" hint-placeholder-count="2">
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 0 16px; align-items: center; padding: 13px 0; border-bottom: 1px solid #F0EAE1;">
+        <div style="font-size: 17px; font-weight: 800;">{{ h.periode }}</div>
+        <div style="font-size: 16px; color: #8B979D;">{{ h.date }}</div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 19px;">{{ h.salaire }}</div>
+        <div style="display: flex; gap: 8px;">
+          <button onClick="{{ h.onCharger }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 14px; color: #2B3A42; background: #E4EFE8; border: none; border-radius: 10px; padding: 9px 13px; cursor: pointer;" style-hover="background: #CFE2D6;">Charger</button>
+          <button onClick="{{ h.onSupprimer }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 14px; color: #A6543F; background: #F7E3DD; border: none; border-radius: 10px; padding: 9px 13px; cursor: pointer;" style-hover="background: #EFD2C9;">Supprimer</button>
+        </div>
+      </div>
+    </sc-for>
+
+    <div style="margin-top: 22px; font-size: 17px; color: #6B7A81;">Sauvegarde automatique dans ce navigateur. Exporte un fichier pour conserver tes données ailleurs.</div>
+    <div style="margin-top: 14px; display: flex; align-items: center; gap: 12px;">
+      <button onClick="{{ onExporter }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: none; border-radius: 12px; padding: 14px 22px; cursor: pointer;" style-hover="background: #1F2C33;">Exporter (.json)</button>
+      <label style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #2B3A42; background: #EFE9E1; border-radius: 12px; padding: 14px 22px; cursor: pointer;">Importer
+        <input type="file" accept="application/json" onChange="{{ onImporter }}" style="display: none;" />
+      </label>
+    </div>
+
+    <div style="margin-top: 26px; padding-top: 24px; border-top: 1px solid #DDD5C8; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+      <div>
+        <div style="font-family: Fredoka, sans-serif; font-size: 24px; color: #4E7A66; letter-spacing: 1px;">COMPARER DEUX ÉTATS</div>
+        <div style="font-size: 17px; color: #6B7A81;">Mesure l'écart entre deux enregistrements, poste par poste.</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onClick="{{ onToggleComparaison }}" style="font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #2B3A42; background: #E4EFE8; border: none; border-radius: 12px; padding: 13px 20px; cursor: pointer;" style-hover="background: #CFE2D6;">{{ libelleComparaison }}</button>
+        <select value="{{ choixA }}" onChange="{{ onChoixA }}" style="font-family: Nunito, sans-serif; font-weight: 700; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #D8CFC2; border-radius: 12px; padding: 13px 14px; outline: none;">
+          <sc-for list="{{ optionsCompare }}" as="o" hint-placeholder-count="1">
+            <option value="{{ o.id }}">{{ o.nom }}</option>
+          </sc-for>
+        </select>
+        <span style="font-size: 15px; color: #8B979D;">vs</span>
+        <select value="{{ choixB }}" onChange="{{ onChoixB }}" style="font-family: Nunito, sans-serif; font-weight: 700; font-size: 16px; color: #2B3A42; background: #fff; border: 1px solid #D8CFC2; border-radius: 12px; padding: 13px 14px; outline: none;">
+          <sc-for list="{{ optionsCompare }}" as="o" hint-placeholder-count="1">
+            <option value="{{ o.id }}">{{ o.nom }}</option>
+          </sc-for>
+        </select>
+      </div>
+    </div>
+
+    <sc-if value="{{ comparaisonMasquee }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top: 14px; font-size: 17px; color: #A0A9AD;">Tableau masqué — clique sur Afficher pour comparer les deux états.</div>
+    </sc-if>
+    <sc-if value="{{ comparaisonVisible }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 16px;">
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0 16px; align-items: center; font-size: 14px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 1px solid #DDD5C8;">
+          <div>POSTE</div>
+          <div style="text-align: right;">{{ titreA }}</div>
+          <div style="text-align: right;">{{ titreB }}</div>
+          <div style="text-align: right;">ÉCART</div>
+        </div>
+        <sc-for list="{{ lignesCompare }}" as="c" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0 16px; align-items: center; padding: 11px 0; border-bottom: 1px solid #F0EAE1;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 11px; height: 11px; border-radius: 3px; background: {{ c.couleur }}; flex: none;"></div>
+              <div style="font-size: 16px; font-weight: 700;">{{ c.nom }}</div>
+            </div>
+            <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 18px;">{{ c.a }}</div>
+            <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 18px;">{{ c.b }}</div>
+            <div style="text-align: right; font-family: Fredoka, sans-serif; font-size: 18px; color: {{ c.couleurEcart }};">{{ c.ecart }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="margin-top: 32px; background: #F4F8F5; border-radius: 22px; padding: 28px 32px;">
+    <div style="font-family: Fredoka, sans-serif; font-size: 26px; color: #4E7A66; letter-spacing: 1px;">CONSEIL — RÉPARTIR SES COMPTES</div>
+    <div style="margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div style="background: #FDFBF7; border-radius: 16px; padding: 22px 26px;">
+        <div style="font-family: Fredoka, sans-serif; font-size: 21px;">Banque physique</div>
+        <div style="font-size: 17px; line-height: 1.6; color: #40525A; margin-top: 8px; text-wrap: pretty;">Elle te donne accès au crédit : acheter de l'immobilier, investir dans un ou plusieurs business qui t'apporteront des revenus supplémentaires. L'historique de tes finances y construit ta crédibilité auprès du banquier.</div>
+      </div>
+      <div style="background: #FDFBF7; border-radius: 16px; padding: 22px 26px;">
+        <div style="font-family: Fredoka, sans-serif; font-size: 21px;">Banque en ligne</div>
+        <div style="font-size: 17px; line-height: 1.6; color: #40525A; margin-top: 8px; text-wrap: pretty;">C'est ton compte du quotidien : les plaisirs, les voyages, les prélèvements, les charges et le loyer.</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; background: #FDF3DA; border-left: 6px solid #F5CE63; border-radius: 14px; padding: 20px 26px; font-size: 17px; line-height: 1.6; color: #40525A; text-wrap: pretty;"><strong style="color: #2B3A42;">Idéalement, deux comptes en ligne :</strong> l'un dédié aux charges fixes — loyer, prélèvements, abonnements — l'autre réservé au loisir &amp; plaisir. Le premier compte ne sert qu'à payer ce qui est obligatoire, tu n'y touches pas. Le second contient ton budget plaisir du mois : quand il est vide, tu t'arrêtes.</div>
+  </div>
+
+  <div style="margin: 32px 0 44px; background: #FBE5E2; border-left: 6px solid #C0563F; border-radius: 14px; padding: 20px 26px; box-sizing: border-box; font-size: 17px; line-height: 1.55; color: #5A3A33;"><strong style="color: #A6432C;">Outil d'estimation à usage personnel.</strong> Il ne remplace pas le simulateur officiel du site des impôts et ne constitue pas un conseil en investissement. Les données restent dans ce navigateur : pense à exporter une sauvegarde.</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040},&quot;salaire&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3000,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;€&quot;,&quot;section&quot;:&quot;Valeurs de départ&quot;},&quot;objectif&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:4200,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;€&quot;,&quot;section&quot;:&quot;Valeurs de départ&quot;},&quot;moisEtf&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:60,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;mois&quot;,&quot;section&quot;:&quot;Prévisionnel boursier&quot;},&quot;tauxEtf&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:8,&quot;min&quot;:0,&quot;max&quot;:15,&quot;step&quot;:0.5,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;%&quot;,&quot;section&quot;:&quot;Prévisionnel boursier&quot;},&quot;moisEp&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:60,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;mois&quot;,&quot;section&quot;:&quot;Prévisionnel épargne&quot;},&quot;devise&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;€&quot;,&quot;$&quot;,&quot;CHF&quot;,&quot;CAD&quot;],&quot;default&quot;:&quot;€&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Affichage&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.circle = React.createRef();
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('dispatch-revenu') || '{}'); } catch (e) {}
+    this.state = Object.assign({
+      salaire: this.props.salaire ?? 3000, ca: this.props.ca ?? 10000,
+      placement: 800, charges: 700, epargneInv: 700, plaisir: 480, impot: 170, don: 150,
+      ouverts: {}, historique: [], periode: '', cmpA: 'actuel', cmpB: 'actuel', cmpOuvert: false, prelevement: false, ouvertEtapes: false, brut: null,
+      sous: {
+        tradeRepublic: 400, ibkr: 400,
+        loyer: 420, credit: 0, energie: 85, eau: 25, internet: 35, assurances: 65, transport: 70,
+        banquePhysique: 450, banqueEnLigne: 250,
+        sorties: 190, voyages: 190, shopping: 100,
+        impotRevenu: 170, taxes: 0,
+        association: 150, dons: 0
+      }, mois: this.props.mois ?? 24, depart: 0, moisEtf: this.props.moisEtf ?? 60, tauxEtf: this.props.tauxEtf ?? 8, moisEp: this.props.moisEp ?? 60, annee: '2025', situation: 'celibataire', personnes: 0, netAnnuel: null, cumulImposable: null,
+      objectif: this.props.objectif ?? 4200, taux: this.props.taux ?? 6
+    }, saved);
+  }
+  set(k, v) {
+    const maj = { [k]: v };
+    if (this.sousDefs(k).length) {
+      const sous = Object.assign({}, this.state.sous);
+      const anc = this.sousDefs(k).reduce((t, d) => t + (sous[d.key] || 0), 0);
+      if (Math.abs(anc - v) > 0.5) maj.sous = this.repartir(k, v, sous);
+    }
+    const postes = ['placement', 'charges', 'epargneInv', 'plaisir', 'impot', 'don'];
+    if (k === 'salaire') {
+      const s0 = this.state;
+      const anc = postes.reduce((t, x) => t + (s0[x] || 0), 0);
+      if (anc > 0 && Math.abs(anc - v) > 0.5) {
+        const r = v / anc;
+        let cumul = 0;
+        postes.forEach((x, i) => {
+          const val = i === postes.length - 1 ? Math.round(v - cumul) : Math.round((s0[x] || 0) * r);
+          cumul += val;
+          maj[x] = Math.max(0, val);
+        });
+        let sous = Object.assign({}, s0.sous);
+        postes.forEach(x => {
+          const rep = this.repartir(x, maj[x], sous);
+          if (rep) sous = rep;
+        });
+        maj.sous = sous;
+      }
+    }
+    this.setState(maj, () => {
+      try { localStorage.setItem('dispatch-revenu', JSON.stringify(this.state)); } catch (e) {}
+    });
+  }
+  fmt(n) {
+    const d = this.props.devise ?? '€';
+    return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n || 0) + ' ' + d;
+  }
+  componentDidUpdate(prev) {
+    const maj = {};
+    ['salaire', 'ca', 'objectif', 'taux', 'mois', 'moisEtf', 'tauxEtf', 'moisEp'].forEach(k => {
+      if (this.props[k] != null && prev[k] !== this.props[k]) maj[k] = this.props[k];
+    });
+    if (Object.keys(maj).length) this.setState(maj, () => {
+      try { localStorage.setItem('dispatch-revenu', JSON.stringify(this.state)); } catch (e) {}
+    });
+  }
+  sousMap() {
+    return {
+      placement: [
+        { key: 'tradeRepublic', nom: 'Trade Republic' },
+        { key: 'ibkr', nom: 'Interactive Brokers' }
+      ],
+      charges: [
+        { key: 'loyer', nom: 'Loyer' },
+        { key: 'credit', nom: 'Crédit' },
+        { key: 'energie', nom: 'Électricité / gaz' },
+        { key: 'eau', nom: 'Eau' },
+        { key: 'internet', nom: 'Internet et téléphone' },
+        { key: 'assurances', nom: 'Assurances' },
+        { key: 'transport', nom: 'Transport / carburant' }
+      ],
+      epargneInv: [
+        { key: 'banquePhysique', nom: 'Banque physique' },
+        { key: 'banqueEnLigne', nom: 'Banque en ligne' }
+      ],
+      plaisir: [
+        { key: 'sorties', nom: 'Sorties / restaurants' },
+        { key: 'voyages', nom: 'Voyages' },
+        { key: 'shopping', nom: 'Shopping' }
+      ],
+      impot: [
+        { key: 'impotRevenu', nom: 'Impôt sur le revenu' },
+        { key: 'taxes', nom: 'Taxes locales' }
+      ],
+      don: [
+        { key: 'association', nom: 'Association' },
+        { key: 'dons', nom: 'Dons ponctuels' }
+      ]
+    };
+  }
+  sousDefs(parent) {
+    return this.sousMap()[parent] || [];
+  }
+  setSous(parent, k, v) {
+    const sous = Object.assign({}, this.state.sous, { [k]: v });
+    const total = this.sousDefs(parent).reduce((t, d) => t + (sous[d.key] || 0), 0);
+    this.setState({ sous: sous }, () => this.set(parent, Math.round(total)));
+  }
+  repartir(parent, valeur, sous) {
+    const defs = this.sousDefs(parent);
+    const anc = defs.reduce((t, d) => t + (sous[d.key] || 0), 0);
+    if (!defs.length) return null;
+    const out = Object.assign({}, sous);
+    if (anc > 0) {
+      const r = valeur / anc;
+      defs.forEach(d => { out[d.key] = Math.round((out[d.key] || 0) * r); });
+    } else {
+      defs.forEach((d, i) => { out[d.key] = i === 0 ? Math.round(valeur) : 0; });
+    }
+    return out;
+  }
+  componentDidMount() {
+    const s = this.state;
+    const postes = ['placement', 'charges', 'epargneInv', 'plaisir', 'impot', 'don'];
+    const somme = postes.reduce((t, x) => t + (s[x] || 0), 0);
+    if (Math.abs(somme - s.salaire) > 0.5) this.set('salaire', s.salaire);
+  }
+  etat(id) {
+    const s = this.state;
+    if (!id || id === 'actuel') return this.defs().reduce((o, d) => { o[d.key] = s[d.key] || 0; return o; }, {});
+    const h = (s.historique || []).find(x => String(x.id) === String(id));
+    return h ? h.postes : {};
+  }
+  nomEtat(id) {
+    if (!id || id === 'actuel') return 'Budget actuel';
+    const h = (this.state.historique || []).find(x => String(x.id) === String(id));
+    return h ? h.periode : '—';
+  }
+  comparer(a, b) {
+    const A = this.etat(a), B = this.etat(b);
+    return this.defs().map(d => {
+      const e = (B[d.key] || 0) - (A[d.key] || 0);
+      const bon = d.key === 'placement' || d.key === 'epargneInv';
+      return {
+        nom: d.nom, couleur: d.couleur,
+        a: this.fmt(A[d.key] || 0), b: this.fmt(B[d.key] || 0),
+        ecart: (e > 0 ? '+ ' : e < 0 ? '− ' : '') + this.fmt(Math.abs(e)),
+        couleurEcart: e === 0 ? '#8B979D' : (bon === (e > 0) ? '#4E8C74' : '#C0563F')
+      };
+    });
+  }
+  marquer(list) {
+    return list.map(e => Object.assign({}, e, { fort: !!e.fort, normal: !e.fort }));
+  }
+  moisCourant() {
+    const d = new Date();
+    const m = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    return m[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  enregistrer() {
+    const s = this.state;
+    const keys = ['placement', 'charges', 'epargneInv', 'plaisir', 'impot', 'don'];
+    const entree = {
+      id: Date.now(),
+      periode: (s.periode || '').trim() || this.moisCourant(),
+      salaire: s.salaire,
+      postes: keys.reduce((o, k) => { o[k] = s[k] || 0; return o; }, {}),
+      sous: Object.assign({}, s.sous),
+      reste: s.salaire - (s.impot || 0) - (s.charges || 0)
+    };
+    const hist = (this.state.historique || []).filter(h => h.periode !== entree.periode).concat([entree]);
+    this.setState({ historique: hist, periode: '' }, () => this.sauver());
+  }
+  supprimer(id) {
+    this.setState({ historique: (this.state.historique || []).filter(h => h.id !== id) }, () => this.sauver());
+  }
+  charger(id) {
+    const h = (this.state.historique || []).find(x => x.id === id);
+    if (!h) return;
+    this.setState(Object.assign({ salaire: h.salaire, sous: Object.assign({}, h.sous) }, h.postes), () => this.sauver());
+  }
+  sauver() {
+    try { localStorage.setItem('dispatch-revenu', JSON.stringify(this.state)); } catch (e) {}
+  }
+  exporter() {
+    const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dispatch-revenu-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  importer(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (data && typeof data === 'object') this.setState(data, () => this.sauver());
+      } catch (err) {}
+    };
+    r.readAsText(f);
+  }
+  cotisDefs() {
+    return [
+      { nom: 'Vieillesse plafonnée', taux: 6.90, libelle: '6,90 %' },
+      { nom: 'Vieillesse déplafonnée', taux: 0.40, libelle: '0,40 %' },
+      { nom: 'Retraite complémentaire Agirc-Arrco (T1)', taux: 3.15, libelle: '3,15 %' },
+      { nom: "Contribution d'équilibre général (CEG)", taux: 0.86, libelle: '0,86 %' },
+      { nom: 'CSG déductible', taux: 6.80 * 0.9825, libelle: '6,80 % sur 98,25 %' },
+      { nom: 'CSG non déductible', taux: 2.40, libelle: '2,40 %' },
+      { nom: 'CRDS', taux: 0.50, libelle: '0,50 %' },
+      { nom: 'Mutuelle (part salariale)', taux: 0, forfait: 37, libelle: 'forfait' }
+    ];
+  }
+  bareme() {
+    const t = this.state.annee === '2024'
+      ? [11294, 28797, 82341, 177106]
+      : [11600, 29579, 84577, 181917];
+    return [
+      { min: 0, max: t[0], taux: 0 },
+      { min: t[0], max: t[1], taux: 11 },
+      { min: t[1], max: t[2], taux: 30 },
+      { min: t[2], max: t[3], taux: 41 },
+      { min: t[3], max: null, taux: 45 }
+    ];
+  }
+  partsFiscales() {
+    const s = this.state, n = Math.max(0, Math.round(s.personnes || 0));
+    let p = s.situation === 'couple' ? 2 : 1;
+    if (s.situation === 'isole' && n > 0) p += 0.5;
+    for (let i = 1; i <= n; i++) p += i <= 2 ? 0.5 : 1;
+    return p;
+  }
+  defs() {
+    return [
+      { key: 'placement', nom: 'Placement (Bourse)', court: 'PLACEMENT', detail: 'Investi chaque mois, capitalisé', couleur: '#8FBFA8' },
+      { key: 'charges', nom: 'Charges & Loyer', court: 'CHARGES', detail: 'Logement, factures, assurances', couleur: '#C7B9E6' },
+      { key: 'epargneInv', nom: 'Épargne Investissement', court: 'ÉPARGNE', detail: "Fonds d'urgence puis investissement", couleur: '#F5CE63' },
+      { key: 'plaisir', nom: 'Plaisir & Loisir', court: 'PLAISIR', detail: 'Sorties, voyages, envies', couleur: '#F08A7E' },
+      { key: 'impot', nom: 'Impôt', court: 'IMPÔT', detail: 'Prélèvements et taxes', couleur: '#B9A48C' },
+      { key: 'don', nom: 'Don', court: 'DON', detail: 'Don mensuel', couleur: '#7FA9C4' }
+    ];
+  }
+  angleDe(e) {
+    const el = this.circle.current;
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    return (Math.atan2(dx, -dy) / (2 * Math.PI) + 1) % 1;
+  }
+  transfert(e) {
+    const f = this.angleDe(e);
+    if (f == null) return;
+    const s = this.state, S = s.salaire || 1;
+    const paire = (s.placement || 0) + (s.don || 0);
+    const fin = ((s.depart || 0) + (s.placement || 0) / S) % 1;
+    let ecart = (fin - f + 1) % 1;
+    let p = Math.round(ecart * S / 5) * 5;
+    if (p > paire) p = ecart - paire / S > 0.5 ? 0 : paire;
+    const depart = ((fin - p / S) % 1 + 1) % 1;
+    this.setState({ placement: p, don: paire - p, depart: depart }, () => {
+      try { localStorage.setItem('dispatch-revenu', JSON.stringify(this.state)); } catch (err) {}
+    });
+  }
+  dragTo(i, e) {
+    const el = this.circle.current;
+    if (!el) return;
+    const s = this.state, r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    let frac = (Math.atan2(dx, -dy) / (2 * Math.PI) + 1 - (s.depart || 0)) % 1;
+    if (frac < 0) frac += 1;
+    const cible = frac * s.salaire;
+    const keys = this.defs().map(d => d.key);
+    let avant = 0;
+    for (let k = 0; k < i; k++) avant += s[keys[k]] || 0;
+    const paire = (s[keys[i]] || 0) + Math.max(0, s[keys[i + 1]] || 0);
+    const nouveau = Math.round(Math.min(paire, Math.max(0, cible - avant)) / 5) * 5;
+    const maj = { [keys[i]]: nouveau, [keys[i + 1]]: paire - nouveau };
+    this.setState(maj, () => {
+      try { localStorage.setItem('dispatch-revenu', JSON.stringify(this.state)); } catch (err) {}
+    });
+  }
+  renderVals() {
+    const s = this.state;
+    const num = (e) => { const v = parseFloat(e.target.value); return isNaN(v) ? 0 : v; };
+    const defs = this.defs();
+    const base = s.salaire || 1;
+    const alloue = defs.reduce((t, d) => t + (s[d.key] || 0), 0);
+    const pctOf = (v) => (v / base * 100).toFixed(1).replace('.', ',') + ' %';
+    const lignes = defs.map(d => ({
+      nom: d.nom, court: d.court, detail: d.detail, couleur: d.couleur, montant: s[d.key] || 0, aSous: this.sousDefs(d.key).length > 0,
+      sousVisibles: this.sousDefs(d.key).length > 0 && !!(s.ouverts || {})[d.key],
+      glyphe: (s.ouverts || {})[d.key] ? '▾' : '▸',
+      onToggle: () => this.setState({ ouverts: Object.assign({}, this.state.ouverts, { [d.key]: !(this.state.ouverts || {})[d.key] }) }),
+      sous: this.sousDefs(d.key).map(sd => ({
+        nom: sd.nom, montant: (s.sous || {})[sd.key] || 0, couleur: d.couleur,
+        pct: (((s.sous || {})[sd.key] || 0) / base * 100).toFixed(1).replace('.', ',') + ' %',
+        onChange: (e) => this.setSous(d.key, sd.key, num(e))
+      })),
+      montantFmt: this.fmt(s[d.key] || 0), pct: pctOf(s[d.key] || 0),
+      editable: true, fixe: false, onChange: (e) => this.set(d.key, num(e))
+    }));
+    const rot = s.depart || 0;
+    const baseCam = alloue > 0 ? alloue : base;
+    const stops = []; const poignees = []; let acc = 0;
+    lignes.forEach((l, i) => {
+      const f = Math.max(0, l.montant) / baseCam;
+      stops.push(l.couleur + ' ' + (acc * 100).toFixed(2) + '% ' + ((acc + f) * 100).toFixed(2) + '%');
+      acc += f;
+      const mid = 2 * Math.PI * (acc - f / 2 + rot);
+      l.etiq = f >= 0.015;
+      const ray = f >= 0.08 ? 34 : (i % 2 ? 44 : 26);
+      l.ex = 50 + ray * Math.sin(mid);
+      l.ey = 50 - ray * Math.cos(mid);
+      l.taille = f >= 0.08 ? 15 : 12;
+      if (i < lignes.length - 1) {
+        const a = 2 * Math.PI * (Math.min(1, acc) + rot);
+        poignees.push({
+          x: 50 + 50 * Math.sin(a), y: 50 - 50 * Math.cos(a),
+          onDown: (e) => { e.target.setPointerCapture(e.pointerId); this.drag = i; },
+          onMove: (e) => { if (this.drag === i) this.dragTo(i, e); },
+          onUp: (e) => { this.drag = null; try { e.target.releasePointerCapture(e.pointerId); } catch (err) {} }
+        });
+      }
+    });
+
+    poignees.push({
+      x: 50 + 50 * Math.sin(2 * Math.PI * rot), y: 50 - 50 * Math.cos(2 * Math.PI * rot),
+      onDown: (e) => { e.target.setPointerCapture(e.pointerId); this.drag = 'don'; },
+      onMove: (e) => { if (this.drag === 'don') this.transfert(e); },
+      onUp: (e) => { this.drag = null; try { e.target.releasePointerCapture(e.pointerId); } catch (err) {} }
+    });
+
+    const reste = s.salaire - alloue;
+    const avenir = (s.placement || 0) + (s.epargneInv || 0);
+    const moisSecu = s.epargneInv > 0 ? Math.ceil(s.objectif / s.epargneInv) : 0;
+    const n = Math.max(1, Math.round(s.mois || 24));
+    const m = (s.taux / 100) / 12;
+    const cap = m === 0 ? s.placement * n : s.placement * ((Math.pow(1 + m, n) - 1) / m);
+    const parts = this.partsFiscales();
+    const netAnnuel = s.netAnnuel != null ? s.netAnnuel : Math.round(s.salaire * 12);
+    const cumulImposable = s.cumulImposable != null ? s.cumulImposable : Math.round(netAnnuel * 1.04);
+    const abattement = Math.min(Math.max(cumulImposable * 0.1, 504), 14171);
+    const imposable = Math.max(0, cumulImposable - abattement);
+    const parPart = imposable / parts;
+    const eur0 = (v) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(Math.round(v || 0)) + ' ' + (this.props.devise ?? '€');
+    let impotTotal = 0;
+    const tranches = this.bareme()
+.map(t => {
+      const assiette = Math.max(0, Math.min(parPart, t.max == null ? parPart : t.max) - t.min);
+      const du = assiette * t.taux / 100 * parts;
+      impotTotal += du;
+      return {
+        plage: t.max == null ? 'au-delà de ' + eur0(t.min) : eur0(t.min) + ' – ' + eur0(t.max),
+        taux: t.taux + ' %',
+        assiette: eur0(assiette * parts),
+        du: eur0(du),
+        actif: assiette > 0,
+        largeur: Math.max(2, Math.round(assiette / Math.max(1, parPart) * 100))
+      };
+    });
+    const impotBrut = impotTotal;
+    const couple = s.situation === 'couple';
+    const seuilDecote = couple ? 3288 : 1988;
+    const decoteMax = couple ? 1470 : 889;
+    const decote = impotBrut > 0 && impotBrut < seuilDecote ? Math.max(0, Math.min(impotBrut, decoteMax - impotBrut * 0.4525)) : 0;
+    const donAnnuel = (s.don || 0) * 12;
+    const reductionDon = Math.min(donAnnuel, imposable * 0.2) * 0.66;
+    const impotNet = Math.max(0, impotBrut - decote - reductionDon);
+    impotTotal = impotNet;
+    const impotMensuel = impotTotal / 12;
+    const cd = this.cotisDefs();
+    const tauxCotis = cd.reduce((t, c) => t + c.taux, 0);
+    const forfaits = cd.reduce((t, c) => t + (c.forfait || 0), 0);
+    const brut = s.brut != null ? s.brut : Math.round((s.salaire + forfaits) / (1 - tauxCotis / 100));
+    const eurC = (v) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(Math.round(v || 0)) + ' ' + (this.props.devise ?? '€');
+    const cotisations = cd.map(c => ({
+      nom: c.nom, taux: c.libelle,
+      montant: eurC(c.forfait != null ? c.forfait : brut * c.taux / 100)
+    }));
+    const totalCotis = cd.reduce((t, c) => t + (c.forfait != null ? c.forfait : brut * c.taux / 100), 0);
+    const impotRetenu = s.impot || 0;
+    const netApresImpot = s.salaire - impotRetenu;
+    const resteDispo = netApresImpot - (s.charges || 0);
+    const nS = Math.max(1, Math.round(s.moisEp || 60));
+    const valEp = (k) => (s.epargneInv || 0) * k;
+    const jalonsEp = [];
+    for (let k = 1; k <= 5; k++) jalonsEp.push(Math.max(1, Math.round(nS * k / 5)));
+    const maxS = valEp(nS) || 1;
+    const etapesEp = jalonsEp.map(k => ({
+      label: k + ' mois',
+      ansEp: (k / 12).toFixed(1).replace('.0', '').replace('.', ',') + ' an(s)',
+      valeur: this.fmt(valEp(k)),
+      hauteur: Math.max(4, Math.round(valEp(k) / maxS * 100))
+    }));
+    const nE = Math.max(1, Math.round(s.moisEtf || 60));
+    const mE = (s.tauxEtf / 100) / 12;
+    const valEtf = (k) => mE === 0 ? (s.placement || 0) * k : (s.placement || 0) * ((Math.pow(1 + mE, k) - 1) / mE);
+    const jalons = [];
+    for (let k = 1; k <= 5; k++) jalons.push(Math.max(1, Math.round(nE * k / 5)));
+    const maxE = valEtf(nE) || 1;
+    const etapes = jalons.map(k => ({
+      label: k + ' mois',
+      ans: (k / 12).toFixed(1).replace('.0', '').replace('.', ',') + ' an(s)',
+      verse: this.fmt((s.placement || 0) * k),
+      valeur: this.fmt(valEtf(k)),
+      gain: this.fmt(valEtf(k) - (s.placement || 0) * k),
+      hauteur: Math.max(4, Math.round(valEtf(k) / maxE * 100))
+    }));
+    return {
+      salaire: s.salaire, ca: s.ca, objectif: s.objectif, taux: s.taux, lignes, poignees,
+      circleRef: this.circle,
+      libelleSous: 'Voir le détail',
+      periode: s.periode || '', placeholderPeriode: this.moisCourant(),
+      historique: (s.historique || []).slice().reverse().map(h => ({
+        id: h.id, periode: h.periode,
+        date: new Date(h.id).toLocaleDateString('fr-FR'),
+        salaire: this.fmt(h.salaire), reste: this.fmt(h.reste),
+        onCharger: () => this.charger(h.id),
+        onSupprimer: () => this.supprimer(h.id)
+      })),
+      optionsCompare: [{ id: 'actuel', nom: 'Budget actuel' }].concat((s.historique || []).slice().reverse().map(h => ({ id: String(h.id), nom: h.periode }))),
+      choixA: s.cmpA || 'actuel', choixB: s.cmpB || 'actuel',
+      onChoixA: (e) => this.setState({ cmpA: e.target.value }),
+      onChoixB: (e) => this.setState({ cmpB: e.target.value }),
+      libelleComparaison: s.cmpOuvert ? 'Masquer' : 'Afficher',
+      onToggleComparaison: () => this.setState({ cmpOuvert: !this.state.cmpOuvert }),
+      comparaisonVisible: !!s.cmpOuvert, comparaisonMasquee: !s.cmpOuvert,
+      titreA: this.nomEtat(s.cmpA), titreB: this.nomEtat(s.cmpB),
+      lignesCompare: this.comparer(s.cmpA, s.cmpB),
+      aucunHistorique: !(s.historique || []).length,
+      nbEnregistrements: (s.historique || []).length,
+      onPeriode: (e) => this.setState({ periode: e.target.value }),
+      onEnregistrer: () => this.enregistrer(),
+      onExporter: () => this.exporter(),
+      onImporter: (e) => this.importer(e),
+      salaireFmt: this.fmt(s.salaire), chargesFmt: this.fmt(s.charges || 0),
+      impotRetenuFmt: this.fmt(impotRetenu),
+      netVerse: this.fmt(s.salaire - impotRetenu),
+
+      brut: brut, cotisations: cotisations,
+      totalCotis: eurC(totalCotis),
+      tauxCotisTotal: '≈ ' + (brut > 0 ? (totalCotis / brut * 100) : 0).toFixed(1).replace('.', ',') + ' %',
+      onBrut: (e) => { const v = num(e); this.setState({ brut: v }, () => this.set('salaire', Math.max(0, Math.round(v - (this.cotisDefs().reduce((t, c) => t + (c.forfait != null ? c.forfait : v * c.taux / 100), 0)))))); },
+      etapesDispatch: this.marquer([
+        { n: '①', nom: 'Salaire brut', detail: 'Avant cotisations salariales', valeur: eurC(brut), couleur: '#2B3A42' },
+        { n: '②', nom: 'Net à payer avant impôt', detail: 'Brut − cotisations = ligne du bulletin', valeur: eurC(s.salaire), couleur: '#2B3A42' },
+        { n: '③', nom: 'Taux de prélèvement estimé', fort: false, detail: 'Barème ' + s.annee + ' ramené au mois, pour information', valeur: eurC(impotRetenu) + ' / mois', couleur: '#8A7355' },
+        { n: '④', nom: 'Impôt déjà prélevé (PAS)', detail: 'Prélevé automatiquement par l\'employeur, reversé au fisc', valeur: '− ' + eurC(impotRetenu), couleur: '#8A7355' },
+        { n: '⑤', nom: 'Net versé sur le compte', detail: 'Net avant impôt, moins le prélèvement à la source = ce qui arrive réellement en banque', valeur: eurC(s.salaire - impotRetenu), couleur: '#2B3A42', fort: true }
+      ]),
+      netApresImpot: this.fmt(netApresImpot),
+      resteDispoFmt: this.fmt(resteDispo), pctResteDispo: pctOf(resteDispo),
+      etapesOuvertes: !!s.ouvertEtapes,
+      libelleEtapes: s.ouvertEtapes ? 'Masquer les étapes avant / après impôt' : 'Voir les étapes avant / après impôt',
+      toggleEtapes: () => this.setState({ ouvertEtapes: !this.state.ouvertEtapes }),
+      couleurToggle: s.prelevement ? '#6FA98D' : '#D8CFC2',
+      alignToggle: s.prelevement ? 'flex-end' : 'flex-start',
+      togglePrelevement: () => {
+        const actif = !this.state.prelevement;
+        this.setState({ prelevement: actif }, () => this.set('impot', actif ? 0 : Math.round(impotMensuel)));
+      },
+      impotPoste: s.impot || 0,
+      onImpotPoste: (e) => this.set('impot', num(e)),
+      libelleSyncImpot: 'Reporter ' + eur0(impotMensuel) + ' dans le poste Impôt',
+      onReporterImpot: () => this.set('impot', Math.round(impotMensuel)),
+      texteprelevement: "Prélèvement à la source : l'employeur retient l'impôt et le reverse au fisc avant le virement. Le net versé sur ton compte en tient déjà compte.",
+      etatImpot: 'impôt déjà retenu par l\'employeur',
+      totalFmt: this.fmt(alloue), pctTotal: pctOf(alloue),
+      camembert: 'conic-gradient(from ' + (rot * 360).toFixed(2) + 'deg,' + stops.join(',') + ')',
+      tauxEpargne: (avenir / base * 100).toFixed(1).replace('.', ','),
+      montantAvenir: this.fmt(avenir),
+      pctPlacement: (s.placement / base * 100).toFixed(1).replace('.', ','),
+      pctEpargneInv: (s.epargneInv / base * 100).toFixed(1).replace('.', ','),
+      epargneInvFmt: this.fmt(s.epargneInv), objectifFmt: this.fmt(s.objectif),
+      placementFmt: this.fmt(s.placement), capital24: this.fmt(cap),
+      moisSecu: moisSecu, avanceSecu: Math.min(100, Math.round(moisSecu ? 100 / moisSecu : 0)),
+      mois: n, ans: (n / 12).toFixed(1).replace('.0', '').replace('.', ','),
+      moisEtf: nE, tauxEtf: s.tauxEtf, ansEtf: (nE / 12).toFixed(1).replace('.0', '').replace('.', ','),
+      etapes: etapes, etfFinal: this.fmt(valEtf(nE)), etfVerse: this.fmt((s.placement || 0) * nE),
+      etfGain: this.fmt(valEtf(nE) - (s.placement || 0) * nE),
+      moisEp: nS, tauxEp: s.tauxEp ?? 3, ansEp: (nS / 12).toFixed(1).replace('.0', '').replace('.', ','),
+      etapesEp: etapesEp, epFinal: this.fmt(valEp(nS)), epVerse: this.fmt((s.epargneInv || 0) * nS),
+      epGain: this.fmt(valEp(nS) - (s.epargneInv || 0) * nS),
+      tranches: tranches, parts: parts,
+      annee: s.annee, situation: s.situation, personnes: Math.max(0, Math.round(s.personnes || 0)),
+      netAnnuel: netAnnuel, cumulImposable: cumulImposable,
+      impotBrut: eur0(impotBrut), plafonnementQf: eur0(0),
+      decote: eur0(decote), reductionDon: eur0(reductionDon),
+      libelleDecote: 'Décote (' + eur0(decoteMax) + ' − 45,25 % de l\'impôt brut, applicable sous ' + eur0(seuilDecote) + ')',
+      onAnnee: (e) => this.set('annee', e.target.value),
+      onSituation: (e) => this.set('situation', e.target.value),
+      onPersonnes: (e) => this.set('personnes', Math.max(0, num(e))),
+      onNetAnnuel: (e) => this.set('netAnnuel', num(e)),
+      onCumul: (e) => this.set('cumulImposable', num(e)),
+      imposableFmt: eur0(imposable), parPartFmt: eur0(parPart),
+      impotAnnuel: eur0(impotTotal), impotMensuel: eur0(impotMensuel),
+      tauxMoyen: (imposable > 0 ? (impotTotal / imposable * 100) : 0).toFixed(1).replace('.', ',') + ' %',
+      tauxMarginal: (this.bareme().filter(t => parPart > t.min).pop() || { taux: 0 }).taux + ' %',
+      ecartImpot: this.fmt(Math.round(impotMensuel) - (s.impot || 0)),
+
+      appliquerImpot: () => this.set('impot', Math.round(impotMensuel)),
+      onMoisEp: (e) => this.set('moisEp', num(e)),
+      onTauxEp: (e) => this.set('tauxEp', num(e)),
+      onMoisEtf: (e) => this.set('moisEtf', num(e)),
+      onTauxEtf: (e) => this.set('tauxEtf', num(e)),
+      onMois: (e) => this.set('mois', num(e)),
+      onMoisSecu: (e) => { const v = num(e); this.set('objectif', Math.round((s.epargneInv || 0) * Math.max(1, v))); },
+      alerte: Math.abs(reste) < 0.5 ? 'Budget équilibré : 100 % du salaire est affecté.' : (reste < 0 ? 'Attention : tes postes dépassent ton salaire de ' + this.fmt(-reste) + '.' : this.fmt(reste) + ' non affectés — le camembert montre la répartition des montants saisis.'),
+      couleurAlerte: reste < -0.5 ? '#C0563F' : '#4E7A66',
+      depassement: reste < -0.5, pasDeDepassement: reste >= -0.5,
+      depassementFmt: this.fmt(Math.max(0, -reste)),
+      onSalaire: (e) => this.set('salaire', num(e)),
+      onCa: (e) => this.set('ca', num(e)),
+      onTaux: (e) => this.set('taux', num(e)),
+      onObjectif: (e) => this.set('objectif', num(e))
+    };
+  }
+}
+</script>
+</body>
+</html>
