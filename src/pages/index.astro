@@ -1,0 +1,161 @@
+---
+import Base from '../layouts/Base.astro';
+import Dashboard from '../components/Dashboard.jsx';
+import Inscription from '../components/Inscription.jsx';
+import Contact from '../components/Contact.jsx';
+
+const fonctionnalites = [
+  { ico: '🥧', t: 'Répartition manipulable', d: 'Fais glisser les poignées du camembert : montants et pourcentages suivent en direct, sans rééquilibrage imposé.' },
+  { ico: '📄', t: 'Du brut au net versé', d: 'Cotisations détaillées, prélèvement à la source, puis le montant qui arrive réellement sur ton compte.' },
+  { ico: '🧾', t: "Barème d'impôt intégré", d: "Tranches, décote, parts fiscales et réduction pour don — l'estimation se reporte dans ton budget." },
+  { ico: '📈', t: 'Projections chiffrées', d: "Placement capitalisé et épargne cumulée sur l'horizon de ton choix, jalon par jalon." },
+  { ico: '🗂️', t: 'Historique et comparaison', d: "Enregistre un état par mois, recharge-le, et mesure l'écart poste par poste." },
+  { ico: '🔒', t: "Tes données t'appartiennent", d: 'Rien ne quitte ton navigateur. Export et import en un fichier, quand tu veux.' },
+];
+
+const methode = [
+  { n: '01', c: '#8FBFA8', t: 'Pose ton salaire', d: 'Du brut au net versé, avec le détail des cotisations et du prélèvement à la source.' },
+  { n: '02', c: '#F5CE63', t: 'Répartis tes postes', d: 'Six catégories, des sous-postes dépliables, et un camembert que tu ajustes à la main.' },
+  { n: '03', c: '#C7B9E6', t: 'Lis les conséquences', d: 'Impôt estimé, épargne cumulée et capital investi se recalculent avec ton arbitrage.' },
+];
+---
+<Base>
+  <div class="page">
+    <header class="nav">
+      <div class="nav__in">
+        <a href="/" class="logo" aria-label="Contrôle mon revenu — accueil">
+          <span class="logo__mark" aria-hidden="true">€</span>
+          <span class="logo__txt">CONTRÔLE MON REVENU</span>
+        </a>
+        <nav class="nav__links" aria-label="Navigation principale">
+          <a href="#produit">Produit</a>
+          <a href="#methode">Méthode</a>
+          <a href="#outil">Le tableau</a>
+          <a href="#apropos">À propos</a>
+          <a href="#contact">Contact</a>
+          <a href="#compte" class="btn-cta">S'inscrire</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="badge"><span class="badge__dot"></span>Gratuit · aucune donnée envoyée en ligne</div>
+        <h1>Reprends le contrôle<br />de mon revenu</h1>
+        <p class="hero__lead">Un seul écran pour répartir ton salaire, estimer ton impôt et projeter ton épargne. Tu ajustes, tout se recalcule.</p>
+        <div class="hero__ctas">
+          <a href="#compte" class="btn btn--vert">Créer mon compte</a>
+          <a href="#methode" class="btn btn--ligne">Voir la méthode</a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__k" style="color: #8FBFA8;">POSTES SUIVIS</div>
+            <div class="stat__v">6</div>
+            <div class="stat__d">Placement, charges, épargne, plaisir, impôt, don</div>
+          </div>
+          <div class="stat">
+            <div class="stat__k" style="color: #C7B9E6;">DONNÉES</div>
+            <div class="stat__v">100 % local</div>
+            <div class="stat__d">Stockées dans ton navigateur, export libre</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="compte" class="wrap wrap--72">
+        <Inscription client:only="react">
+          <div slot="fallback" class="island-loading"></div>
+        </Inscription>
+      </section>
+
+      <section id="outil" class="wrap wrap--72">
+        <div class="outil-head">
+          <div>
+            <h2 class="sec-title">Ton tableau de dispatch</h2>
+            <div class="sec-sub">Tout est modifiable, tout est conservé d'une visite à l'autre.</div>
+          </div>
+          <div class="outil-note">Camembert manipulable · barème d'impôt · projections<br />Sur petit écran, fais défiler le tableau horizontalement.</div>
+        </div>
+        <div class="outil-frame">
+          <div class="outil-frame__in">
+            <Dashboard client:only="react" />
+          </div>
+        </div>
+      </section>
+
+      <section id="produit" class="wrap">
+        <h2 class="sec-title">Tout ce que le tableau fait pour toi</h2>
+        <div class="sec-sub">Pas de tableur à maintenir, aucune donnée envoyée en ligne.</div>
+        <div class="grid3">
+          {fonctionnalites.map((f) => (
+            <div class="card">
+              <div class="card__ico" aria-hidden="true">{f.ico}</div>
+              <h3 class="card__t" style="font-weight: 400; margin-bottom: 0;">{f.t}</h3>
+              <div class="card__d">{f.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="methode" class="wrap">
+        <h2 class="sec-title">La méthode en trois gestes</h2>
+        <div class="sec-sub">Un budget n'est utile que s'il se manipule sans effort.</div>
+        <div class="grid3">
+          {methode.map((m) => (
+            <div class="card">
+              <div class="card__num" style={`color: ${m.c};`}>{m.n}</div>
+              <h3 class="card__t" style="font-weight: 400; margin-bottom: 0;">{m.t}</h3>
+              <div class="card__d">{m.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="apropos" class="wrap">
+        <div class="apropos">
+          <div>
+            <div class="surtitre">À PROPOS</div>
+            <h2 class="titre-bloc">Ce que je n'ai pas eu, je l'ai construit</h2>
+            <div class="puces">
+              <div><span class="puce" style="background: #8FBFA8;"></span>Expérience vécue, pas conseil professionnel</div>
+              <div><span class="puce" style="background: #F5CE63;"></span>Des outils simples, pas du jargon</div>
+              <div><span class="puce" style="background: #C7B9E6;"></span>Accessible sans diplôme en finance</div>
+            </div>
+          </div>
+          <div class="apropos__txt">
+            <p>J'ai grandi sans que personne autour de moi ne puisse m'expliquer comment gérer mon argent. Ni parent, ni proche, ni mentor pour m'ouvrir les yeux sur ces sujets — simplement personne qui en parlait. Alors j'ai appris seule : des recherches, du temps, et beaucoup d'essais-erreurs.</p>
+            <p>Ce que cette absence de repères m'a appris, c'est à quel point bien gérer ses revenus peut changer une vie. Pas besoin d'être riche au départ. Il faut surtout les bons outils et les bonnes informations, au bon moment.</p>
+            <p>Je ne suis pas conseiller financier et je ne prétends pas l'être. Ce que je partage ici vient de mon expérience et de mes recherches personnelles : ce que j'aurais aimé qu'on m'explique clairement, dès le début.</p>
+            <p>C'est pour ça que j'ai créé ce site : un endroit clair et accessible où n'importe qui peut comprendre son revenu et en reprendre le contrôle, sans diplôme en finance et sans entourage « qui sait ».</p>
+            <p class="manuscrit">Si tu as appris à te débrouiller seul avec ton argent, tu es exactement au bon endroit.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="wrap">
+        <Contact client:only="react" adresse="contact@controlemonrevenu.fr">
+          <div slot="fallback" class="island-loading"></div>
+        </Contact>
+      </section>
+
+      <section class="wrap">
+        <div class="cta-band">
+          <div>
+            <div class="cta-band__t">Commence par un seul chiffre</div>
+            <div class="cta-band__d">Ton salaire. Le reste se construit en quelques minutes.</div>
+          </div>
+          <a href="#outil" class="btn btn--creme">Ouvrir mon tableau</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__in">
+        <div class="footer__brand">
+          <span class="logo__mark" aria-hidden="true">€</span>
+          <span>CONTRÔLE MON REVENU</span>
+        </div>
+        <div class="footer__note">Outil d'estimation à usage personnel. Il ne remplace pas le simulateur officiel des impôts et ne constitue pas un conseil en investissement.</div>
+      </div>
+    </footer>
+  </div>
+</Base>

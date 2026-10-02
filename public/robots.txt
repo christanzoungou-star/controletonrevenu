@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://controlemonrevenu.fr/sitemap-index.xml

@@ -1,0 +1,5 @@
+# Cloudflare Pages — used by `npm run deploy` (direct upload with Wrangler).
+# With the Git integration, set the same values in the Pages dashboard instead.
+name = "controlemonrevenu"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"

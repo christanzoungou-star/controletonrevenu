@@ -1,0 +1,71 @@
+/* Shared dark panel used by the Inscription and Contact blocks */
+.pn { background: #2B3A42; border: 1px solid #35474F; border-radius: 24px; padding: 34px 38px; box-sizing: border-box; color: #FDFBF7; font-family: Nunito, sans-serif; }
+.pn-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; }
+.pn-2col--contact { grid-template-columns: .85fr 1.15fr; }
+.pn-surtitre { font-size: 14px; letter-spacing: 3px; color: #8FBFA8; font-weight: 800; }
+.pn-titre { font-family: Fredoka, sans-serif; font-size: 32px; line-height: 1.1; letter-spacing: 1px; margin-top: 10px; }
+.pn-texte { font-size: 16px; line-height: 1.6; color: #A9BDC5; margin-top: 12px; text-wrap: pretty; }
+.pn-puces { margin-top: 20px; display: grid; gap: 10px; font-size: 15px; color: #A9BDC5; }
+.pn-puces > div { display: flex; align-items: center; gap: 10px; }
+.pn-puce { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.pn-boite { background: #223037; border: 1px solid #35474F; border-radius: 18px; padding: 26px 28px; }
+.pn-onglets { display: flex; gap: 8px; background: #2B3A42; border-radius: 12px; padding: 5px; }
+.pn-onglet { flex: 1; font-family: Nunito, sans-serif; font-weight: 800; font-size: 15px; color: #A9BDC5; background: transparent; border: none; border-radius: 9px; padding: 11px 12px; cursor: pointer; }
+.pn-onglet.is-actif { color: #223037; background: #8FBFA8; }
+.pn-form { display: grid; gap: 12px; }
+.pn-champ { display: grid; gap: 6px; }
+.pn-label { font-size: 14px; color: #A9BDC5; }
+.pn-input { font-family: Nunito, sans-serif; font-size: 16px; color: #FDFBF7; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 14px; outline: none; min-width: 0; }
+.pn-input:focus { border-color: #8FBFA8; }
+.pn-input::placeholder { color: #8798A1; }
+textarea.pn-input { line-height: 1.5; resize: vertical; }
+.pn-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #A9BDC5; line-height: 1.45; cursor: pointer; }
+.pn-check input { margin-top: 3px; width: 16px; height: 16px; accent-color: #8FBFA8; flex: none; }
+.pn-erreur { background: #3A2A28; border: 1px solid #6B4038; border-radius: 11px; padding: 11px 14px; font-size: 15px; color: #F0B3A6; }
+.pn-btn { font-family: Nunito, sans-serif; font-weight: 800; font-size: 17px; color: #223037; background: #8FBFA8; border: none; border-radius: 12px; padding: 15px 18px; cursor: pointer; text-decoration: none; }
+.pn-btn:hover { background: #A5CDB8; color: #223037; }
+.pn-btn--sm { font-size: 16px; padding: 13px 20px; }
+.pn-btn-ligne { font-family: Nunito, sans-serif; font-weight: 800; font-size: 16px; color: #FDFBF7; background: transparent; border: 1px solid #3C4F58; border-radius: 11px; padding: 13px 20px; cursor: pointer; }
+.pn-btn-ligne:hover { background: #33474F; }
+.pn-note { font-size: 13px; color: #8798A1; text-align: center; }
+
+/* Inscription — connecté */
+.pn-profil { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.pn-profil__id { display: flex; align-items: center; gap: 16px; }
+.pn-avatar { width: 54px; height: 54px; border-radius: 17px; background: #8FBFA8; color: #223037; font-family: Fredoka, sans-serif; font-size: 24px; display: flex; align-items: center; justify-content: center; flex: none; }
+.pn-bonjour { font-family: Fredoka, sans-serif; font-size: 26px; }
+.pn-meta { font-size: 15px; color: #A9BDC5; }
+.pn-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pn-actions .pn-btn { font-size: 16px; padding: 13px 20px; border-radius: 11px; }
+
+/* Contact */
+.pn-mail { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; background: #223037; border: 1px solid #3C4F58; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-weight: 800; color: #8FBFA8; word-break: break-all; }
+.pn-mail:hover { color: #FDFBF7; }
+.pn-avert { margin-top: 22px; font-size: 14px; line-height: 1.55; color: #8798A1; }
+.pn-ligne2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pn-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pn-compteur { font-size: 13px; color: #8798A1; }
+.pn-ok { display: grid; gap: 14px; text-align: center; padding: 10px 0; }
+.pn-ok__ico { width: 54px; height: 54px; margin: 0 auto; border-radius: 17px; background: #6FA98D; color: #17241F; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+.pn-ok__t { font-family: Fredoka, sans-serif; font-size: 24px; }
+.pn-recap { text-align: left; background: #2B3A42; border: 1px solid #3C4F58; border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.55; color: #CBD7DC; white-space: pre-wrap; word-break: break-word; }
+.pn-ok__btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.pn-ok__btns .pn-btn-ligne { border-radius: 12px; }
+.pn-hist { margin-top: 26px; padding-top: 22px; border-top: 1px solid #35474F; }
+.pn-hist__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.pn-hist__t { font-family: Fredoka, sans-serif; font-size: 20px; letter-spacing: 1px; color: #8FBFA8; }
+.pn-hist__list { margin-top: 14px; display: grid; gap: 10px; }
+.pn-hist__item { display: grid; grid-template-columns: 1fr auto auto; gap: 0 16px; align-items: center; background: #223037; border: 1px solid #35474F; border-radius: 14px; padding: 14px 18px; }
+.pn-hist__sujet { font-size: 16px; font-weight: 800; }
+.pn-petit { font-size: 14px; color: #8798A1; }
+.pn-btn-suppr { font-family: Nunito, sans-serif; font-weight: 800; font-size: 14px; color: #F0B3A6; background: transparent; border: 1px solid #6B4038; border-radius: 10px; padding: 9px 13px; cursor: pointer; }
+.pn-btn-suppr:hover { background: #3A2A28; }
+
+@media (max-width: 860px) {
+  .pn { padding: 26px 20px; }
+  .pn-2col, .pn-2col--contact { grid-template-columns: 1fr; gap: 28px; }
+  .pn-boite { padding: 20px 18px; }
+  .pn-ligne2 { grid-template-columns: 1fr; }
+  .pn-hist__item { grid-template-columns: 1fr auto; gap: 8px 12px; }
+  .pn-hist__item > .pn-petit { grid-row: 2; }
+}
