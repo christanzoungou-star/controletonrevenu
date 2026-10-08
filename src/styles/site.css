@@ -36,6 +36,18 @@ a:hover { color: var(--creme); }
 .nav__links a { color: var(--texte-2); }
 .nav__links a:hover { color: var(--creme); }
 .nav__links a.btn-cta { color: var(--ardoise); background: var(--vert); padding: 10px 18px; border-radius: 10px; }
+.langue { display: inline-flex; }
+.langue select {
+  appearance: none; -webkit-appearance: none;
+  font-family: var(--nunito); font-size: 15px; font-weight: 800; color: var(--creme);
+  background: var(--ardoise-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23FDFBF7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border: 1px solid var(--filet-2); border-radius: 10px;
+  padding: 9px 34px 9px 14px; cursor: pointer; outline: none;
+}
+.langue select:hover { border-color: var(--texte-3); }
+.langue select:focus-visible { border-color: var(--vert); }
+.langue option { color: var(--ardoise); background: #fff; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* Hero */
 .hero { text-align: center; padding: 92px 28px 0; max-width: 900px; margin: 0 auto; }
@@ -120,4 +132,7 @@ a:hover { color: var(--creme); }
 }
 @media (max-width: 400px) {
   .logo__txt { font-size: 13px; letter-spacing: .5px; }
+}
+@media (max-width: 520px) {
+  .langue { display: none; }
 }
