@@ -9,7 +9,10 @@ base de données.
 ```
 src/
   layouts/Base.astro        <head>, polices, balises SEO
-  pages/index.astro         page d'accueil (d'après « Site Budget »)
+  pages/index.astro         page d'accueil française (/)
+  pages/[lang]/index.astro  pages traduites (/en/, /es/, /pt/, /de/, /it/, /nl/)
+  components/Accueil.astro  contenu de la page d'accueil, commun à toutes les langues
+  i18n/                     un fichier de textes par langue (fr.js, en.js…)
   components/Dashboard.jsx  tableau de dispatch (d'après « Budget Ideal »)
   components/Inscription.jsx
   components/Contact.jsx
@@ -21,6 +24,10 @@ project/, chats/            maquettes Claude Design d'origine (référence)
 Pour ajouter plus tard des articles de blog : créer `src/pages/blog/…` (fichiers
 `.astro` ou `.md`) — ils réutilisent `Base.astro` et sont ajoutés automatiquement
 au sitemap.
+
+Pour modifier un texte, changer la même clé dans chaque fichier de `src/i18n/`.
+Pour ajouter une langue : créer `src/i18n/xx.js` (copie de `fr.js`), puis l'ajouter
+à `LANGUES` et `LOCALES` dans `src/i18n/index.js`.
 
 ## En local
 

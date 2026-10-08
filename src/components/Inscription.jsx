@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { dico, formats, tr } from '../i18n/index.js';
 import './panneau.css';
 
 const CLE = 'dispatch-compte';
@@ -19,7 +20,9 @@ async function empreinte(email, mdp) {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-export default function Inscription() {
+export default function Inscription({ lang = 'fr' }) {
+  const t = dico(lang).insc;
+  const f = formats(lang);
   const [sauve] = useState(lire);
   const [comptes, setComptes] = useState(sauve.comptes || []);
   const [actif, setActif] = useState(sauve.actif || null);
@@ -35,24 +38,24 @@ export default function Inscription() {
 
   async function valider() {
     const mail = email.trim().toLowerCase();
-    if (!EMAIL_OK.test(mail)) return setMessage('Saisis une adresse email valide.');
-    if (motDePasse.length < 8) return setMessage('Le mot de passe doit faire au moins 8 caractères.');
+    if (!EMAIL_OK.test(mail)) return setMessage(t.errEmail);
+    if (motDePasse.length < 8) return setMessage(t.errMdp);
     const existant = comptes.find((c) => c.email === mail);
     const hash = await empreinte(mail, motDePasse);
     if (inscription) {
-      if (!prenom.trim()) return setMessage('Indique ton prénom.');
-      if (!accepte) return setMessage('Coche la case pour continuer.');
+      if (!prenom.trim()) return setMessage(t.errPrenom);
+      if (!accepte) return setMessage(t.errCocher);
       if (existant) {
         setMode('connexion');
-        return setMessage('Un compte existe déjà avec cet email — connecte-toi.');
+        return setMessage(t.errExiste);
       }
       const liste = comptes.concat([{ email: mail, prenom: prenom.trim(), mdp: hash, cree: Date.now() }]);
       setComptes(liste);
       setActif(mail);
       ecrire(liste, mail);
     } else {
-      if (!existant) return setMessage('Aucun compte avec cet email.');
-      if (existant.mdp !== hash) return setMessage('Mot de passe incorrect.');
+      if (!existant) return setMessage(t.errAucun);
+      if (existant.mdp !== hash) return setMessage(t.errIncorrect);
       setActif(mail);
       ecrire(comptes, mail);
     }
@@ -74,15 +77,13 @@ export default function Inscription() {
           <div className="pn-profil__id">
             <div className="pn-avatar">{compte.prenom.slice(0, 1).toUpperCase()}</div>
             <div>
-              <div className="pn-bonjour">Bonjour {compte.prenom}</div>
-              <div className="pn-meta">
-                {compte.email} · membre depuis {new Date(compte.cree).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-              </div>
+              <div className="pn-bonjour">{tr(t.bonjour, { prenom: compte.prenom })}</div>
+              <div className="pn-meta">{tr(t.membre, { email: compte.email, date: f.moisAnnee(compte.cree) })}</div>
             </div>
           </div>
           <div className="pn-actions">
-            <a href="#outil" className="pn-btn">Aller à mon tableau</a>
-            <button type="button" className="pn-btn-ligne" onClick={deconnexion}>Se déconnecter</button>
+            <a href="#outil" className="pn-btn">{t.allerTableau}</a>
+            <button type="button" className="pn-btn-ligne" onClick={deconnexion}>{t.deconnexion}</button>
           </div>
         </div>
       </div>
@@ -93,15 +94,13 @@ export default function Inscription() {
     <div className="pn">
       <div className="pn-2col">
         <div>
-          <div className="pn-surtitre">{inscription ? 'CRÉER UN COMPTE' : 'SE CONNECTER'}</div>
-          <div className="pn-titre">{inscription ? 'Garde ton budget au même endroit' : 'Content de te revoir'}</div>
-          <div className="pn-texte">
-            Ton compte reste sur cet appareil : il protège l'accès à tes relevés et te permet de retrouver ton budget d'une visite à l'autre. Aucune donnée n'est envoyée sur internet.
-          </div>
+          <div className="pn-surtitre">{inscription ? t.surtitreCreer : t.surtitreConnexion}</div>
+          <div className="pn-titre">{inscription ? t.titreCreer : t.titreConnexion}</div>
+          <div className="pn-texte">{t.texte}</div>
           <div className="pn-puces">
-            <div><span className="pn-puce" style={{ background: '#8FBFA8' }} />Aucun email de vérification, aucun spam</div>
-            <div><span className="pn-puce" style={{ background: '#F5CE63' }} />Ton budget rattaché à ton profil</div>
-            <div><span className="pn-puce" style={{ background: '#C7B9E6' }} />Export possible à tout moment</div>
+            {t.puces.map((p, i) => (
+              <div key={i}><span className="pn-puce" style={{ background: ['#8FBFA8', '#F5CE63', '#C7B9E6'][i] }} />{p}</div>
+            ))}
           </div>
         </div>
 
@@ -112,35 +111,35 @@ export default function Inscription() {
         >
           <div className="pn-onglets" role="tablist">
             <button type="button" role="tab" aria-selected={inscription} className={'pn-onglet' + (inscription ? ' is-actif' : '')}
-              onClick={() => { setMode('inscription'); setMessage(''); }}>Créer un compte</button>
+              onClick={() => { setMode('inscription'); setMessage(''); }}>{t.ongletCreer}</button>
             <button type="button" role="tab" aria-selected={!inscription} className={'pn-onglet' + (!inscription ? ' is-actif' : '')}
-              onClick={() => { setMode('connexion'); setMessage(''); }}>Se connecter</button>
+              onClick={() => { setMode('connexion'); setMessage(''); }}>{t.ongletConnexion}</button>
           </div>
 
           <div className="pn-form" style={{ marginTop: 18 }}>
             {inscription && (
               <label className="pn-champ">
-                <span className="pn-label">Prénom</span>
-                <input className="pn-input" type="text" autoComplete="given-name" value={prenom} onChange={(e) => setPrenom(e.target.value)} placeholder="Camille" />
+                <span className="pn-label">{t.prenom}</span>
+                <input className="pn-input" type="text" autoComplete="given-name" value={prenom} onChange={(e) => setPrenom(e.target.value)} placeholder={t.phPrenom} />
               </label>
             )}
             <label className="pn-champ">
-              <span className="pn-label">Email</span>
-              <input className="pn-input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="camille@exemple.fr" />
+              <span className="pn-label">{t.email}</span>
+              <input className="pn-input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t.phEmail} />
             </label>
             <label className="pn-champ">
-              <span className="pn-label">Mot de passe</span>
-              <input className="pn-input" type="password" autoComplete={inscription ? 'new-password' : 'current-password'} value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} placeholder="8 caractères minimum" />
+              <span className="pn-label">{t.mdp}</span>
+              <input className="pn-input" type="password" autoComplete={inscription ? 'new-password' : 'current-password'} value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} placeholder={t.phMdp} />
             </label>
             {inscription && (
               <label className="pn-check">
                 <input type="checkbox" checked={accepte} onChange={(e) => setAccepte(e.target.checked)} />
-                <span>Je comprends que cet outil est une estimation personnelle et ne constitue pas un conseil financier.</span>
+                <span>{t.accepte}</span>
               </label>
             )}
             {message && <div className="pn-erreur" role="alert">{message}</div>}
-            <button type="submit" className="pn-btn">{inscription ? 'Créer mon compte' : 'Me connecter'}</button>
-            <div className="pn-note">Mot de passe stocké localement, sous forme non lisible — si tu l'oublies, réimporte simplement ton fichier d'export.</div>
+            <button type="submit" className="pn-btn">{inscription ? t.btnCreer : t.btnConnexion}</button>
+            <div className="pn-note">{t.note}</div>
           </div>
         </form>
       </div>

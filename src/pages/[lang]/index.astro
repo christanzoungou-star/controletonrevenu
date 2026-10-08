@@ -1,0 +1,11 @@
+---
+import Accueil from '../../components/Accueil.astro';
+import { LANGUES, DEFAUT } from '../../i18n/index.js';
+
+export function getStaticPaths() {
+  return LANGUES.filter((l) => l !== DEFAUT).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+<Accueil lang={lang} />

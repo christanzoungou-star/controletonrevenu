@@ -106,6 +106,7 @@
 .bd-carte { background: #F6F1E9; border-radius: 16px; padding: 16px 20px; }
 .bd-carte input { width: 118px; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 30px; color: #2B3A42; background: transparent; border: none; border-bottom: 2px dashed #DCCFBB; padding: 0; outline: none; }
 .bd-tr { display: grid; grid-template-columns: 1.4fr 80px 1fr 1fr; gap: 0 14px; align-items: center; }
+.bd[lang=it] .bd-tr { grid-template-columns: 1.4fr 100px 1fr 1fr; }
 .bd-tr--head { margin-top: 18px; font-family: Fredoka, sans-serif; font-size: 15px; color: #6B7A81; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 2px solid #E0D6C8; }
 .bd-tr--ligne { padding: 11px 0; border-bottom: 1px solid #F0EAE1; }
 .bd-tr__barre { margin-top: 5px; height: 6px; border-radius: 3px; background: #F0EAE1; overflow: hidden; }

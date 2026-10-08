@@ -1,0 +1,167 @@
+---
+import Base from '../layouts/Base.astro';
+import Dashboard from './Dashboard.jsx';
+import Inscription from './Inscription.jsx';
+import Contact from './Contact.jsx';
+import { LANGUES, chemin, dico } from '../i18n/index.js';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const t = dico(lang);
+const icones = ['🥧', '📄', '🧾', '📈', '🗂️', '🔒'];
+const couleursMethode = ['#8FBFA8', '#F5CE63', '#C7B9E6'];
+const couleursPuces = ['#8FBFA8', '#F5CE63', '#C7B9E6'];
+---
+<Base lang={lang} title={t.meta.title} description={t.meta.description}>
+  <div class="page">
+    <header class="nav">
+      <div class="nav__in">
+        <a href={chemin(lang)} class="logo" aria-label={t.nav.accueil}>
+          <span class="logo__mark" aria-hidden="true">€</span>
+          <span class="logo__txt">CONTRÔLE MON REVENU</span>
+        </a>
+        <nav class="nav__links" aria-label={t.nav.principale}>
+          <a href="#outil">{t.nav.outil}</a>
+          <a href="#apropos">{t.nav.apropos}</a>
+          <a href="#contact">{t.nav.contact}</a>
+          <label class="langue">
+            <span class="sr-only">{t.nav.langue}</span>
+            <select aria-label={t.nav.langue} data-langue>
+              {LANGUES.map((l) => (
+                <option value={chemin(l)} lang={l} selected={l === lang}>{l.toUpperCase()}</option>
+              ))}
+            </select>
+          </label>
+          <a href="#compte" class="btn-cta">{t.nav.inscrire}</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="badge"><span class="badge__dot"></span>{t.hero.badge}</div>
+        <h1>{t.hero.titre1}<br />{t.hero.titre2}</h1>
+        <p class="hero__lead">{t.hero.lead}</p>
+        <div class="hero__ctas">
+          <a href="#compte" class="btn btn--vert">{t.hero.cta1}</a>
+          <a href="#methode" class="btn btn--ligne">{t.hero.cta2}</a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__k" style="color: #8FBFA8;">{t.hero.postesK}</div>
+            <div class="stat__v">6</div>
+            <div class="stat__d">{t.hero.postesD}</div>
+          </div>
+          <div class="stat">
+            <div class="stat__k" style="color: #C7B9E6;">{t.hero.donneesK}</div>
+            <div class="stat__v">{t.hero.donneesV}</div>
+            <div class="stat__d">{t.hero.donneesD}</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="compte" class="wrap wrap--72">
+        <Inscription client:only="react" lang={lang}>
+          <div slot="fallback" class="island-loading"></div>
+        </Inscription>
+      </section>
+
+      <section id="outil" class="wrap wrap--72">
+        <div class="outil-head">
+          <div>
+            <h2 class="sec-title">{t.outil.titre}</h2>
+            <div class="sec-sub">{t.outil.sous}</div>
+          </div>
+          <div class="outil-note">{t.outil.note1}<br />{t.outil.note2}</div>
+        </div>
+        <div class="outil-frame">
+          <div class="outil-frame__in">
+            <Dashboard client:only="react" lang={lang} />
+          </div>
+        </div>
+      </section>
+
+      <section id="produit" class="wrap">
+        <h2 class="sec-title">{t.produit.titre}</h2>
+        <div class="sec-sub">{t.produit.sous}</div>
+        <div class="grid3">
+          {t.produit.cartes.map((f, i) => (
+            <div class="card">
+              <div class="card__ico" aria-hidden="true">{icones[i]}</div>
+              <h3 class="card__t" style="font-weight: 400; margin-bottom: 0;">{f.t}</h3>
+              <div class="card__d">{f.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="methode" class="wrap">
+        <h2 class="sec-title">{t.methode.titre}</h2>
+        <div class="sec-sub">{t.methode.sous}</div>
+        <div class="grid3">
+          {t.methode.etapes.map((m, i) => (
+            <div class="card">
+              <div class="card__num" style={`color: ${couleursMethode[i]};`}>{'0' + (i + 1)}</div>
+              <h3 class="card__t" style="font-weight: 400; margin-bottom: 0;">{m.t}</h3>
+              <div class="card__d">{m.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="apropos" class="wrap">
+        <div class="apropos">
+          <div>
+            <div class="surtitre">{t.apropos.surtitre}</div>
+            <h2 class="titre-bloc">{t.apropos.titre}</h2>
+            <div class="puces">
+              {t.apropos.puces.map((p, i) => (
+                <div><span class="puce" style={`background: ${couleursPuces[i]};`}></span>{p}</div>
+              ))}
+            </div>
+          </div>
+          <div class="apropos__txt">
+            {t.apropos.paragraphes.map((p) => <p>{p}</p>)}
+            <p class="manuscrit">{t.apropos.manuscrit}</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="wrap">
+        <Contact client:only="react" lang={lang} adresse="contact@controlemonrevenu.fr">
+          <div slot="fallback" class="island-loading"></div>
+        </Contact>
+      </section>
+
+      <section class="wrap">
+        <div class="cta-band">
+          <div>
+            <div class="cta-band__t">{t.cta.titre}</div>
+            <div class="cta-band__d">{t.cta.sous}</div>
+          </div>
+          <a href="#outil" class="btn btn--creme">{t.cta.btn}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__in">
+        <div class="footer__brand">
+          <span class="logo__mark" aria-hidden="true">€</span>
+          <span>CONTRÔLE MON REVENU</span>
+        </div>
+        <div class="footer__note">{t.footer}</div>
+      </div>
+    </footer>
+  </div>
+</Base>
+
+<script>
+  const select = document.querySelector<HTMLSelectElement>('[data-langue]');
+  select?.addEventListener('change', () => {
+    window.location.href = select.value + window.location.hash;
+  });
+</script>
